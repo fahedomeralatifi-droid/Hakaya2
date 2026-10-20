@@ -1159,37 +1159,49 @@
           }
         }
       } catch (e) {
-        // Server might not be running or offline; fallback to localStorage
+        // Server might not be running or offline; fallback to localStorage / Firebase
       }
 
-      // 2. Fetch products if version changed or initial load
+      // 2. Fetch products if version changed or initial load (Local Server API)
+      let srvProducts = null;
       try {
         const res = await fetch(getAppApiBase() + '/api/products?t=' + Date.now());
         if (res.ok) {
-          const srvProducts = await res.json();
-          if (Array.isArray(srvProducts) && srvProducts.length > 0) {
-            const isDiff = srvProducts.length !== PRODUCTS.length || 
-              srvProducts.some((p, i) => !PRODUCTS[i] || p.id !== PRODUCTS[i].id || p.priceSAR !== PRODUCTS[i].priceSAR || p.priceYER !== PRODUCTS[i].priceYER || p.name !== PRODUCTS[i].name);
-            
-            if (isDiff || PRODUCTS.length === 0) {
-              PRODUCTS = srvProducts;
-              try {
-                localStorage.setItem('hikaya_products', JSON.stringify(PRODUCTS));
-              } catch (e) {}
-              if (rerender) filterCategory(currentFilter);
-              if (selectedProduct) {
-                const updated = PRODUCTS.find(p => p.id === selectedProduct.id);
-                if (updated) {
-                  selectedProduct = updated;
-                  if (document.getElementById('productDetailDrawer')?.classList.contains('open')) {
-                    updateDetailPriceDisplay();
-                  }
-                }
+          srvProducts = await res.json();
+        }
+      } catch (err) {}
+
+      // 3. Fallback to static products.json (works seamlessly on GitHub Pages static hosting!)
+      if (!srvProducts || !Array.isArray(srvProducts) || srvProducts.length === 0) {
+        try {
+          const staticRes = await fetch('products.json?t=' + Date.now());
+          if (staticRes.ok) {
+            srvProducts = await staticRes.json();
+          }
+        } catch (staticErr) {}
+      }
+
+      if (Array.isArray(srvProducts) && srvProducts.length > 0) {
+        const isDiff = srvProducts.length !== PRODUCTS.length || 
+          srvProducts.some((p, i) => !PRODUCTS[i] || p.id !== PRODUCTS[i].id || p.priceSAR !== PRODUCTS[i].priceSAR || p.priceYER !== PRODUCTS[i].priceYER || p.name !== PRODUCTS[i].name);
+        
+        if (isDiff || PRODUCTS.length === 0) {
+          PRODUCTS = srvProducts;
+          try {
+            localStorage.setItem('hikaya_products', JSON.stringify(PRODUCTS));
+          } catch (e) {}
+          if (rerender) filterCategory(currentFilter);
+          if (selectedProduct) {
+            const updated = PRODUCTS.find(p => p.id === selectedProduct.id);
+            if (updated) {
+              selectedProduct = updated;
+              if (document.getElementById('productDetailDrawer')?.classList.contains('open')) {
+                updateDetailPriceDisplay();
               }
             }
           }
         }
-      } catch (err) {
+      } else {
         // Offline / file:// fallback
         try {
           const localProds = localStorage.getItem('hikaya_products');
@@ -2287,16 +2299,61 @@
       showToast('تم إرسال الطلب واعتماده بنجاح! 👑');
     }
 
-    // Subscribe to Firebase Live Sync for Products & Banks (if available)
-    window.addEventListener('load', () => {
-      if (typeof HikayaFirebaseService !== 'undefined' && HikayaFirebaseService.isAvailable()) {
-        HikayaFirebaseService.subscribeToProducts((liveProducts) => {
-          if (liveProducts && liveProducts.length > 0) {
-            console.log('🔄 [Firebase Live Sync] تحديث قائمة العطور في التطبيق:', liveProducts.length);
-          }
-        });
+    // ═════════════════════════════════════════════════════════════════════════
+    // FIREBASE REALTIME CLOUD SYNC (مزامنة سحابية عالمية فورية لكافة الهواتف والمواقع)
+    // ═════════════════════════════════════════════════════════════════════════
+    function initAppFirebaseSync() {
+      if (typeof HikayaFirebaseService === 'undefined' || !HikayaFirebaseService.isAvailable()) {
+        setTimeout(initAppFirebaseSync, 300);
+        return;
       }
-    });
+
+      console.log('⚡ [HIKAYA Firebase] تم الاتصال بالمزامنة السحابية المباشرة...');
+
+      // 1. Live Products Push (إضافة، تعديل، وحذف العطور ينعكس في كل الهواتف فوراً بدون تحديث)
+      HikayaFirebaseService.subscribeToProducts((liveProducts) => {
+        if (Array.isArray(liveProducts) && liveProducts.length > 0) {
+          console.log('🔄 [Firebase Push] تحديث قائمة العطور في التطبيق فورياً:', liveProducts.length);
+          PRODUCTS = liveProducts;
+          try {
+            localStorage.setItem('hikaya_products', JSON.stringify(PRODUCTS));
+            localStorage.setItem('hikaya_products_version', Date.now().toString());
+          } catch (e) {}
+          filterCategory(currentFilter);
+          if (selectedProduct) {
+            const updated = PRODUCTS.find(p => p.id === selectedProduct.id);
+            if (updated) {
+              selectedProduct = updated;
+              if (document.getElementById('productDetailDrawer')?.classList.contains('open')) {
+                updateDetailPriceDisplay();
+              }
+            }
+          }
+        }
+      });
+
+      // 2. Live Exchange Rate Subscription
+      HikayaFirebaseService.subscribeToExchangeRate((liveRate) => {
+        if (liveRate && !isNaN(liveRate) && liveRate > 0) {
+          officialExchangeRate = liveRate;
+          try {
+            localStorage.setItem('hikaya_exchange_rate', liveRate.toString());
+          } catch (e) {}
+          renderProductsGrid();
+        }
+      });
+
+      // 3. Live Bank Accounts Subscription
+      HikayaFirebaseService.subscribeToBanks((liveBanks) => {
+        if (liveBanks && typeof liveBanks === 'object') {
+          Object.assign(APP_BANKS, liveBanks);
+          updateAppBankDisplay();
+        }
+      });
+    }
+
+    // Launch Firebase Realtime Sync
+    initAppFirebaseSync();
   </script>
 
 </body>

@@ -1336,7 +1336,7 @@
       });
     }
 
-    // Load Realtime State from Server API, LocalStorage & AppState
+    // Load Realtime State from Server API, LocalStorage, Firebase & AppState
     async function initAdminRealtimeEngine() {
       // 1. Initial LocalStorage check for instant 0ms offline/file loading
       try {
@@ -1350,7 +1350,10 @@
         }
       } catch (e) {}
 
-      // 2. Exchange Rate
+      // 2. Initialize Firebase Cloud Sync immediately (Realtime cross-device sync)
+      initAdminFirebaseSync();
+
+      // 3. Exchange Rate
       try {
         const resRate = await fetch(getAdminApiBase() + '/api/exchange-rate?t=' + Date.now());
         if (resRate.ok) {
@@ -1363,7 +1366,7 @@
       }
       updateExchangeRateUI();
 
-      // 3. Categories
+      // 4. Categories
       try {
         const resCats = await fetch(getAdminApiBase() + '/api/categories?t=' + Date.now());
         if (resCats.ok) {
@@ -1380,24 +1383,31 @@
       }
       renderAdminCategoriesUI();
 
-      // 4. Products from Server API
+      // 5. Products from Server API or static products.json (works on GitHub Pages!)
+      let srvList = null;
       try {
         const resProds = await fetch(getAdminApiBase() + '/api/products?t=' + Date.now());
         if (resProds.ok) {
-          const srvList = await resProds.json();
-          if (Array.isArray(srvList) && srvList.length > 0) {
-            adminProductsList = srvList;
-            try {
-              localStorage.setItem('hikaya_products', JSON.stringify(adminProductsList));
-              localStorage.setItem('hikaya_products_version', Date.now().toString());
-            } catch (e) {}
-            if (typeof AppState !== 'undefined') AppState.products = adminProductsList;
+          srvList = await resProds.json();
+        }
+      } catch (e) {}
+
+      if (!srvList || !Array.isArray(srvList) || srvList.length === 0) {
+        try {
+          const staticRes = await fetch('products.json?t=' + Date.now());
+          if (staticRes.ok) {
+            srvList = await staticRes.json();
           }
-        }
-      } catch (e) {
-        if (typeof AppState !== 'undefined' && AppState.products && adminProductsList.length === 0) {
-          adminProductsList = AppState.products;
-        }
+        } catch (e) {}
+      }
+
+      if (Array.isArray(srvList) && srvList.length > 0) {
+        adminProductsList = srvList;
+        try {
+          localStorage.setItem('hikaya_products', JSON.stringify(adminProductsList));
+          localStorage.setItem('hikaya_products_version', Date.now().toString());
+        } catch (e) {}
+        if (typeof AppState !== 'undefined') AppState.products = adminProductsList;
       }
       if (!adminProductsList || adminProductsList.length === 0) {
         adminProductsList = [
@@ -1525,6 +1535,52 @@
       renderAdminProductsTable();
     }
 
+    // Realtime Cloud Firebase Engine for Admin Dashboard
+    function initAdminFirebaseSync() {
+      if (typeof HikayaFirebaseService === 'undefined' || !HikayaFirebaseService.isAvailable()) {
+        setTimeout(initAdminFirebaseSync, 300);
+        return;
+      }
+
+      console.log('⚡ [Admin Firebase] تم الاتصال بالمزامنة السحابية المباشرة...');
+
+      // 1. Subscribe live to products from Firebase
+      HikayaFirebaseService.subscribeToProducts((liveProducts) => {
+        if (Array.isArray(liveProducts) && liveProducts.length > 0) {
+          console.log('🔄 [Admin Firebase Push] استلام قائمة العطور من السحابة:', liveProducts.length);
+          adminProductsList = liveProducts;
+          try {
+            localStorage.setItem('hikaya_products', JSON.stringify(adminProductsList));
+            localStorage.setItem('hikaya_products_version', Date.now().toString());
+          } catch (e) {}
+          if (typeof AppState !== 'undefined') AppState.products = adminProductsList;
+          renderAdminProductsTable();
+          renderExchangePreviewTable();
+        }
+      });
+
+      // 2. Subscribe live to orders placed from mobile phones
+      HikayaFirebaseService.subscribeToOrders((liveOrders) => {
+        if (Array.isArray(liveOrders)) {
+          if (typeof AppState !== 'undefined') {
+            AppState.orders = liveOrders;
+            saveState();
+          }
+          renderAdminOrders();
+          renderAdminKPIs();
+        }
+      });
+
+      // 3. Subscribe live to exchange rate
+      HikayaFirebaseService.subscribeToExchangeRate((liveRate) => {
+        if (liveRate && !isNaN(liveRate) && liveRate > 0) {
+          currentAdminExchangeRate = liveRate;
+          if (typeof AppState !== 'undefined') AppState.exchangeRate = liveRate;
+          updateExchangeRateUI();
+        }
+      });
+    }
+
     function updateExchangeRateUI() {
       const rateInput = document.getElementById('settingExchangeRateInput');
       if (rateInput) rateInput.value = currentAdminExchangeRate;
@@ -1588,8 +1644,8 @@
 
       // Realtime Firebase
       if (typeof HikayaFirebaseService !== 'undefined' && HikayaFirebaseService.isAvailable()) {
-        HikayaFirebaseService.saveExchangeRate(rate);
-        adminProductsList.forEach(p => HikayaFirebaseService.saveProduct(p));
+        await HikayaFirebaseService.saveExchangeRate(rate);
+        await HikayaFirebaseService.saveAllProducts(adminProductsList);
       }
 
       updateExchangeRateUI();
@@ -1930,9 +1986,13 @@
         });
       } catch (err) {}
 
-      // Sync to Firebase
+      // Sync to Firebase Cloud Database (Cross-device instant sync)
       if (typeof HikayaFirebaseService !== 'undefined' && HikayaFirebaseService.isAvailable()) {
-        HikayaFirebaseService.saveProduct(newProduct);
+        try {
+          await HikayaFirebaseService.saveAllProducts(adminProductsList);
+        } catch (fbErr) {
+          console.warn('Firebase save error:', fbErr);
+        }
       }
 
       renderAdminProductsTable();
@@ -2090,9 +2150,13 @@
         });
       } catch (err) {}
 
-      // Sync to Firebase
+      // Sync to Firebase Cloud Database (Cross-device instant sync)
       if (typeof HikayaFirebaseService !== 'undefined' && HikayaFirebaseService.isAvailable()) {
-        HikayaFirebaseService.saveProduct(prod);
+        try {
+          await HikayaFirebaseService.saveAllProducts(adminProductsList);
+        } catch (fbErr) {
+          console.warn('Firebase edit error:', fbErr);
+        }
       }
 
       renderAdminProductsTable();
@@ -2125,8 +2189,14 @@
         });
       } catch (err) {}
 
+      // Sync to Firebase Cloud Database (Cross-device instant deletion)
       if (typeof HikayaFirebaseService !== 'undefined' && HikayaFirebaseService.isAvailable()) {
-        HikayaFirebaseService.deleteProduct(productId);
+        try {
+          await HikayaFirebaseService.deleteProduct(productId);
+          await HikayaFirebaseService.saveAllProducts(adminProductsList);
+        } catch (fbErr) {
+          console.warn('Firebase delete error:', fbErr);
+        }
       }
 
       renderAdminProductsTable();

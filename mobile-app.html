@@ -1,0 +1,2360 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>حكاية | HIKAYA Haute Parfumerie</title>
+
+  <!-- PWA & Mobile Web App Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="حكاية">
+  <meta name="theme-color" content="#14120C">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/images/hikaya_logo_gold.png">
+
+  <!-- Google Fonts: Almarai & Cairo (Saudi Luxury UI Style) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&family=Cairo:wght@600;700;800;900&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'hk-gold': '#B8945F',
+            'hk-gold-bright': '#D4AF37',
+            'hk-gold-light': '#F7E7A9',
+            'hk-gold-deep': '#8C6D3F',
+            'hk-noir': '#0A0A0A',
+            'hk-noir-card': '#141414',
+            'hk-champagne': '#FAF7F2'
+          },
+          fontFamily: {
+            sans: ['Almarai', 'sans-serif'],
+            heading: ['Cairo', 'sans-serif'],
+            latin: ['Cormorant Garamond', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ==========================================================================
+       PURE NATIVE MOBILE APPLICATION STYLES (لا توجد إطارات وهمية أو صور ثابتة)
+       ========================================================================== */
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #0A0A0A;
+      font-family: 'Almarai', sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #111;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* Mobile Container: 100% on phones, max 480px centered on desktop */
+    #appRoot {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      background: #FAF9F6;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.7);
+      overflow-x: hidden;
+    }
+
+    /* Screen Views (SPA Router) */
+    .app-screen {
+      flex: 1;
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      animation: fadeIn 0.25s ease-out;
+    }
+    .app-screen.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Floating Bottom Dock */
+    .mobile-floating-nav {
+      position: fixed;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 24px);
+      max-width: 456px;
+      height: 64px;
+      background: #FFFFFF;
+      border-radius: 36px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), 0 0 1px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 10px;
+      z-index: 40;
+    }
+
+    .nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #8E8E93;
+      font-size: 10px;
+      font-weight: 700;
+      transition: color 0.15s;
+      width: 48px;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+    }
+    .nav-btn.active {
+      color: #B8945F;
+    }
+
+    .nav-center-action {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #F3E5AB 0%, #D4AF37 50%, #B8945F 100%);
+      box-shadow: 0 4px 14px rgba(212, 175, 55, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #0A0A0A;
+      margin-top: -24px;
+      border: 3.5px solid #FFFFFF;
+      transition: transform 0.15s;
+      cursor: pointer;
+    }
+    .nav-center-action:active {
+      transform: scale(0.92);
+    }
+
+    /* Product Cards */
+    .product-card-ui {
+      background: #FFFFFF;
+      border-radius: 20px;
+      padding: 12px;
+      position: relative;
+      border: 1px solid #ECE7DE;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+      transition: transform 0.15s;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+    .product-card-ui:active {
+      transform: scale(0.98);
+    }
+
+    .floating-add-btn {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      border: 1.5px solid #D4AF37;
+      color: #B8945F;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 800;
+      box-shadow: 0 2px 8px rgba(184, 148, 95, 0.2);
+      cursor: pointer;
+      transition: background-color 0.15s, color 0.15s;
+      z-index: 10;
+    }
+    .floating-add-btn:active {
+      background: #D4AF37;
+      color: #FFFFFF;
+      transform: scale(0.9);
+    }
+
+    /* Category Chips */
+    .category-chip {
+      padding: 7px 16px;
+      border-radius: 999px;
+      background: #FFFFFF;
+      border: 1px solid #EAEAEA;
+      color: #4A4A4A;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      cursor: pointer;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .category-chip.active {
+      background: linear-gradient(135deg, #2D0814 0%, #1A040A 100%);
+      color: #F7E7A9;
+      border-color: #B8945F;
+      box-shadow: 0 3px 10px rgba(45, 8, 20, 0.25);
+    }
+
+    /* Toast Notification */
+    .app-toast {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-60px);
+      background: #141414;
+      border: 1px solid #D4AF37;
+      color: #F7E7A9;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      z-index: 100;
+      opacity: 0;
+      transition: transform 0.25s ease-out, opacity 0.25s ease-out;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .app-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Slide-in Drawers (Cart & Product Sheet) */
+    .cart-drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 70;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .cart-drawer-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .cart-drawer-sheet {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translate3d(-50%, 100%, 0);
+      width: 100%;
+      max-width: 480px;
+      max-height: 85vh;
+      background: #FFFFFF;
+      border-top-left-radius: 28px;
+      border-top-right-radius: 28px;
+      box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.25);
+      z-index: 75;
+      display: flex;
+      flex-direction: column;
+      will-change: transform;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .cart-drawer-overlay.open .cart-drawer-sheet {
+      transform: translate3d(-50%, 0, 0);
+    }
+
+    /* Collapsible card animation */
+    .collapsible-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+    .collapsible-body.expanded {
+      max-height: 300px;
+      transition: max-height 0.35s ease-in;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Toast Notification -->
+  <div id="toastNotification" class="app-toast">
+    <span>✨</span>
+    <span id="toastMessage">تمت الإضافة إلى السلة بنجاح</span>
+    <span>🛒</span>
+  </div>
+
+  <!-- Main Mobile App Wrapper -->
+  <div id="appRoot">
+
+    <!-- ═════════════════════════════════════════════════════════════════════════
+         SCREEN 1: HOME PAGE (الصفحة الرئيسية)
+         ═════════════════════════════════════════════════════════════════════════ -->
+    <main id="screenHome" class="app-screen active pb-24">
+
+      <!-- 1. Header Gradient: Luxury Cabernet Gradient, Logo Only, Currency & Search Bar (الصورة 3) -->
+      <header class="bg-gradient-to-b from-[#240810] via-[#350C19] to-[#481223] px-4 pt-3.5 pb-4 text-white shadow-md">
+        
+        <!-- Top Row: Centered Logo & Currency/Language Switcher (حذف الموقع والتوصيل تماماً) -->
+        <div class="flex items-center justify-between mb-3">
+          <!-- Currency Toggle Button -->
+          <button onclick="toggleCurrency()" class="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-full border border-[#D4AF37]/40 text-xs font-bold text-[#F7E7A9] transition-all">
+            <img src="assets/images/sar_symbol_gold.png" alt="ر.س" class="w-3.5 h-3.5 object-contain" />
+            <span id="currencyLabel">ر.س</span>
+            <span class="text-[10px] text-gray-300">🌐</span>
+          </button>
+
+          <!-- Centered Official Logo (اسم التطبيق: الشعار فقط كما طلب المستخدم) -->
+          <div class="flex items-center justify-center flex-1 cursor-pointer" onclick="navigateToScreen('screenHome')">
+            <img 
+              src="assets/images/hikaya_logo_gold.png" 
+              alt="دار حكاية للعطور" 
+              class="h-10 w-auto max-w-[140px] object-contain" 
+            />
+          </div>
+
+          <!-- User Profile Shortcut Button (الصورة 2) -->
+          <button onclick="openUserProfileModal()" class="w-8 h-8 rounded-full bg-white/10 border border-[#D4AF37]/40 flex items-center justify-center text-[#F7E7A9] hover:bg-white/20 text-xs font-bold transition-all" title="الملف الشخصي">
+            👤
+          </button>
+        </div>
+
+        <!-- Fully Rounded Pure White Search Bar (خلفية بيضاء وحواف دائرية بالكامل) -->
+        <div class="relative">
+          <div class="flex items-center bg-white rounded-full px-3.5 py-2.5 shadow-md">
+            <svg class="w-4 h-4 text-gray-400 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input 
+              id="appSearchInput"
+              type="text" 
+              placeholder="ابحث عن عطر ملكي، دهن عود، مسك..." 
+              class="w-full text-xs text-gray-900 placeholder-gray-400 bg-transparent outline-none font-sans"
+              oninput="handleSearch(this.value)"
+            />
+            <button class="w-6 h-6 rounded-full bg-[#F5EFE6] flex items-center justify-center text-[#8C6D3F] text-xs font-bold" title="بحث">
+              🔍
+            </button>
+          </div>
+        </div>
+
+      </header>
+
+      <!-- ═══════════════════════════════════════════════════════════════════════
+           USER PROFILE STATUS BAR (الاسم على اليمين بشكل مرتب فخم والعملة على اليسار)
+           ═══════════════════════════════════════════════════════════════════════ -->
+      <div id="userProfileStatusBar" class="hidden px-4 py-2.5 bg-gradient-to-l from-white via-[#FDFCFA] to-white border-b border-gray-100 flex items-center justify-between shadow-2xs">
+        
+        <!-- RIGHT (اليمين): Profile Info (الاسم، حياك الله، الهاتف، والأيقونة الرمزية) -->
+        <div class="flex items-center gap-2.5 cursor-pointer group" onclick="openUserProfileModal()" title="تعديل بيانات الملف الشخصي">
+          <!-- Circular Avatar with Edit Pencil Badge (على اليمين) -->
+          <div class="relative w-10 h-10 rounded-full bg-gradient-to-br from-[#EBF5F5] to-[#D5EAE7] border border-[#BCE1DC] flex items-center justify-center text-[#0E6466] font-heading font-black text-sm shadow-xs shrink-0 group-hover:scale-105 transition-transform">
+            <span id="userHeaderAvatarLetter">👤</span>
+            <!-- Edit Pencil Badge -->
+            <span class="absolute -bottom-0.5 -left-0.5 w-3.5 h-3.5 rounded-full bg-[#0E6466] text-white text-[7px] flex items-center justify-center border border-white shadow-xs">
+              ✏️
+            </span>
+          </div>
+
+          <!-- Text Details (مرتب وفخم بجانب الأيقونة) -->
+          <div class="text-right">
+            <span class="text-[9px] text-[#8C6D3F] font-bold block leading-tight">حيّاك الله 👑</span>
+            <h4 id="userHeaderName" class="text-xs font-heading font-black text-gray-950 group-hover:text-[#0E6466] transition-colors leading-tight mt-0.5"></h4>
+            <span id="userHeaderPhone" class="text-[10px] font-mono text-gray-500 font-bold block leading-tight mt-0.5" dir="ltr"></span>
+          </div>
+        </div>
+
+        <!-- LEFT (اليسار): Currency Switcher Button (ر.س 🌐) -->
+        <div class="flex items-center">
+          <button onclick="toggleCurrency()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#F4F9F8] text-[#0E6466] text-xs font-bold border border-[#CCE8E5] hover:bg-[#DFF0EE] active:scale-95 transition-all shadow-2xs" title="تحويل العملة">
+            <span id="headerProfileCurrency" class="font-bold">ر.س</span>
+            <span class="text-xs">🌐</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- 2. Ultra-Luxury Promotional Hero Banner (الصورة 3 مكان الصورة 4 بدقة وفخامة) -->
+      <div class="px-3 pt-3">
+        <div class="relative rounded-2xl overflow-hidden shadow-xl border border-hk-gold/40 cursor-pointer group active:scale-[0.99] transition-transform bg-[#0F0D0A]" onclick="scrollToCategories()" title="انقر لتصفح التشكيلة الملكية">
+          <img 
+            src="assets/images/banner_luxury_hikaya.png" 
+            alt="دار حكاية للعطور الملكية - HIKAYA" 
+            class="w-full h-auto object-cover block group-hover:scale-[1.02] transition-transform duration-500 rounded-2xl" 
+          />
+          <!-- Subtle Luxury Gloss / Border Glow -->
+          <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-hk-gold/30 pointer-events-none"></div>
+        </div>
+      </div>
+
+      <!-- 3. Horizontal Category Chips (الأصناف الأربعة المحددة بدقة بالصورة 1) -->
+      <div class="pt-3 pb-1">
+        <div class="flex items-center gap-2 overflow-x-auto px-3 scrollbar-none pb-1 text-xs" id="categoryChipsList">
+          <button onclick="filterCategory('all', this)" class="category-chip active">
+            الكل ✨
+          </button>
+          <button onclick="filterCategory('oud', this)" class="category-chip">
+            دهون عطر ملكي 👑
+          </button>
+          <button onclick="filterCategory('musk', this)" class="category-chip">
+            مسك صافي 🌸
+          </button>
+          <button onclick="filterCategory('men', this)" class="category-chip">
+            عطور رجالية 👔
+          </button>
+          <button onclick="filterCategory('women', this)" class="category-chip">
+            عطور نسائية 👗
+          </button>
+        </div>
+      </div>
+
+      <!-- 4. Product Grid (شبكة المنتجات 2-Columns) -->
+      <div class="px-3 pt-2">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-xs font-heading font-black text-gray-900 flex items-center gap-1">
+            <span>💎 مقتنيات حكاية المختارة</span>
+          </h3>
+          <span class="text-[10px] text-hk-gold-deep font-bold" id="productsCountLabel">6 عطور ملكية</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5" id="productsGridContainer">
+          <!-- Dynamically populated via JS -->
+        </div>
+      </div>
+
+    </main>
+
+    <!-- ═════════════════════════════════════════════════════════════════════════
+         PRODUCT DETAIL BOTTOM SHEET DRAWER (تنبثق مثل السلة بنصف الشاشة فخمة وبكافة التفاصيل - الصورة 5)
+         ═════════════════════════════════════════════════════════════════════════ -->
+    <div id="productDetailDrawer" class="cart-drawer-overlay" onclick="closeProductDrawer(event)">
+      <div class="cart-drawer-sheet max-h-[88vh] overflow-hidden flex flex-col" onclick="event.stopPropagation()">
+        
+        <!-- Header: Drag Handle, Title & Close Button -->
+        <div class="pt-2.5 pb-2 px-4 border-b border-gray-100 flex items-center justify-between bg-white shrink-0">
+          <!-- Favorite Button -->
+          <button id="drawerHeartBtn" onclick="toggleFavoriteDetail()" class="w-8 h-8 rounded-full bg-gray-50 border border-gray-200 flex items-center justify-center text-gray-400 hover:text-rose-500 active:scale-90 transition-transform" title="إضافة للمفضلة">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+          </button>
+
+          <!-- Drag Handle Pill -->
+          <div class="flex flex-col items-center">
+            <span class="w-10 h-1 bg-gray-300 rounded-full block mb-0.5"></span>
+            <span class="text-[10px] text-hk-gold-deep font-bold font-heading">تفاصيل العطر الفاخر 👑</span>
+          </div>
+
+          <!-- Close Button -->
+          <button onclick="closeProductDrawer()" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 text-xs font-bold active:scale-95 transition-all" title="إغلاق">✕</button>
+        </div>
+
+        <!-- Scrollable Perfume Content Area -->
+        <div class="overflow-y-auto px-4 py-3 space-y-3.5 flex-1">
+          <!-- Touch-Swipeable Luxury Perfume Gallery (تسحب بيدك يمين يسار للتنقل بين الصور) -->
+          <div id="detailGalleryContainer" class="relative bg-gradient-to-b from-[#FDFBF7] via-[#F8F5EE] to-[#FAF8F5] rounded-2xl p-4 flex flex-col items-center justify-center border border-[#EDE8DF] select-none overflow-hidden touch-pan-y">
+            
+            <!-- Slides Track with smooth animation -->
+            <div id="detailGalleryTrack" class="w-full flex items-center justify-center min-h-[160px] relative">
+              <img id="detailImg" src="assets/images/bottles_3d/royal_oud.png" alt="العطر" class="relative z-10 max-h-40 w-auto object-contain transition-opacity duration-200 select-none pointer-events-none drop-shadow-md" />
+            </div>
+
+            <!-- Left / Right Navigation Buttons (Touch & Click) -->
+            <button id="galleryPrevBtn" type="button" onclick="galleryPrevImage()" class="absolute left-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/95 shadow-md border border-gray-200 text-gray-700 hover:text-black flex items-center justify-center text-sm font-bold active:scale-90 z-20 transition-all hidden" title="الصورة السابقة">
+              ‹
+            </button>
+            <button id="galleryNextBtn" type="button" onclick="galleryNextImage()" class="absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/95 shadow-md border border-gray-200 text-gray-700 hover:text-black flex items-center justify-center text-sm font-bold active:scale-90 z-20 transition-all hidden" title="الصورة التالية">
+              ›
+            </button>
+
+            <!-- Bottom Gallery Bar: Dots Indicator & Counter Badge -->
+            <div class="flex items-center justify-between w-full px-2 pt-2 z-10">
+              <div id="galleryDotsContainer" class="flex items-center gap-1.5">
+                <!-- Populated dynamically via JS -->
+              </div>
+              <span id="galleryCounterBadge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-black/10 text-gray-700">
+                1 / 1
+              </span>
+            </div>
+
+            <!-- Realistic Contact Shadow -->
+            <div class="w-24 h-2 bg-black/15 rounded-full blur-xs mt-1"></div>
+          </div>
+
+          <!-- Perfume Title & Rating -->
+          <div class="text-right space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-[10px] font-bold">
+                ★ <span id="detailRatingText">4.9</span> (تقييم النخبة)
+              </span>
+              <span class="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                متوفر في المخزون ✓
+              </span>
+            </div>
+
+            <h2 id="detailTitle" class="text-base font-heading font-black text-gray-950 pt-0.5 leading-snug">
+              دهن عود ملكي معتق
+            </h2>
+
+            <p id="detailSubtitle" class="text-xs text-gray-500 font-medium">
+              تولة ملكية زجاجية فاخرة • 12 مل (ربع تولة معتقة)
+            </p>
+          </div>
+
+          <!-- كم ملي تحتاج؟ (30 أو 50 أو 100 أو يدوي - مطلب المستخدم بالصورة 4) -->
+          <div class="p-3 rounded-2xl bg-[#FBF9F5] border border-[#EBE3D5] text-right space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-heading font-black text-gray-900">كم ملي تحتاج؟ (الحجم والعبوة):</span>
+              <span id="detailSelectedMlText" class="text-[11px] font-mono font-bold text-hk-gold-deep">100 مل</span>
+            </div>
+
+            <div class="flex items-center gap-2 flex-wrap">
+              <div class="grid grid-cols-3 gap-1.5 flex-1">
+                <button type="button" onclick="selectDetailMl(30, this)" class="detail-ml-chip py-1.5 px-2 rounded-xl border border-gray-200 bg-white text-gray-700 font-bold text-xs flex items-center justify-center gap-1 transition-all">
+                  <span>30 مل</span>
+                </button>
+                <button type="button" onclick="selectDetailMl(50, this)" class="detail-ml-chip py-1.5 px-2 rounded-xl border border-gray-200 bg-white text-gray-700 font-bold text-xs flex items-center justify-center gap-1 transition-all">
+                  <span>50 مل</span>
+                </button>
+                <button type="button" onclick="selectDetailMl(100, this)" class="detail-ml-chip active py-1.5 px-2 rounded-xl border border-hk-gold bg-[#1A1A1A] text-hk-gold-light font-bold text-xs flex items-center justify-center gap-1 shadow-sm transition-all">
+                  <span>100 مل</span>
+                </button>
+              </div>
+
+              <!-- بوكس فارغ لتحديد الملي يدوي -->
+              <div class="flex items-center gap-1 bg-white border border-gray-300 rounded-xl px-2.5 py-1.5 shadow-2xs">
+                <label for="detailCustomMlInput" class="text-[10px] text-gray-500 font-bold">يدوي:</label>
+                <input id="detailCustomMlInput" type="number" min="1" max="1000" placeholder="مثال: 75" oninput="onDetailCustomMlChange(this.value)" class="w-12 text-center text-xs font-mono font-bold text-gray-900 bg-transparent outline-none focus:text-hk-gold-deep" />
+                <span class="text-[10px] text-gray-400 font-medium">مل</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Collapsible Fragrance Notes Section -->
+          <div class="border border-[#E0D3C1] bg-[#FAF8F5] rounded-2xl overflow-hidden shadow-2xs">
+            <button onclick="toggleDetailCollapsible()" class="w-full px-3.5 py-2.5 flex items-center justify-between text-right font-heading font-black text-xs text-hk-gold-deep bg-[#F7F2EB] hover:bg-[#F3EDE3] transition-colors">
+              <span class="flex items-center gap-1.5">
+                <span>بهجة العطور ونفحات الأصالة</span>
+                <span class="text-amber-600 text-[10px]">✨</span>
+              </span>
+              <svg id="detailChevron" class="w-4 h-4 text-hk-gold-deep transform transition-transform duration-300 rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"></path></svg>
+            </button>
+
+            <div id="detailCollapsibleBody" class="collapsible-body expanded px-3.5 pb-3 pt-2 text-[11px] text-gray-700 leading-relaxed space-y-2">
+              <p id="detailDescText">
+                دهن عود كمبودي سيلاني عتيق، مستخلص بأعلى درجات النقاء من أندر خشب العود الطبيعي المعتق، يفوح بعبير بخوري بلسمي دافئ يمنحك حضوراً ملكياً مهيباً.
+              </p>
+              <div class="grid grid-cols-2 gap-1.5 pt-1 text-[10px]">
+                <div class="p-1.5 rounded-lg bg-white border border-[#E9E1D5] flex items-center gap-1">
+                  <span class="text-hk-gold">🪵</span>
+                  <span><strong>الثبات:</strong> +72 ساعة</span>
+                </div>
+                <div class="p-1.5 rounded-lg bg-white border border-[#E9E1D5] flex items-center gap-1">
+                  <span class="text-hk-gold">👑</span>
+                  <span><strong>الفوحان:</strong> ملكي آسر</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Sticky Bottom Bar inside the Product Sheet -->
+        <div class="p-3 border-t border-gray-200 bg-white shrink-0">
+          <div class="flex items-center gap-2">
+            <!-- Stepper -->
+            <div class="flex items-center border border-gray-300 rounded-full bg-gray-50 px-2 py-1 shadow-inner">
+              <button onclick="changeDetailQty(-1)" class="w-6 h-6 flex items-center justify-center text-gray-700 font-bold text-base hover:text-black">-</button>
+              <span id="detailQtyDisplay" class="w-6 text-center font-mono font-black text-xs text-gray-900">1</span>
+              <button onclick="changeDetailQty(1)" class="w-6 h-6 flex items-center justify-center text-gray-700 font-bold text-base hover:text-black">+</button>
+            </div>
+
+            <!-- Total Price (الأرقام والكسور العشرية على اليمين وشعار الريال بالأحمر) -->
+            <div class="text-right">
+              <span class="block text-[8px] text-gray-400">الإجمالي:</span>
+              <div class="flex items-baseline gap-1" dir="ltr" id="detailPriceContainer">
+                <span id="detailTotalPriceText" class="text-sm font-mono font-black text-rose-600" dir="ltr">330.00</span>
+                <span id="detailCurrencySymbol"><img src="assets/images/sar_symbol_red.svg" alt="ر.س" class="h-3.5 w-auto object-contain inline" /></span>
+              </div>
+            </div>
+
+            <!-- Main CTA Button -->
+            <button onclick="addCurrentDetailToCart()" class="flex-1 py-2.5 px-3 rounded-full bg-gradient-to-r from-[#17140E] via-[#241F16] to-[#120F0A] border border-hk-gold text-hk-gold-light hover:brightness-125 font-heading font-black text-xs shadow-md flex items-center justify-center gap-1.5 active:scale-95 transition-all">
+              <span>إضافة للسلة</span>
+              <span class="text-sm font-bold">+</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ═════════════════════════════════════════════════════════════════════════
+         FLOATING BOTTOM NAVIGATION (5 أيقونات وزر مركزي متوهج)
+         ═════════════════════════════════════════════════════════════════════════ -->
+    <nav class="mobile-floating-nav" id="mainBottomNav">
+      <!-- 1. الرئيسية -->
+      <button class="nav-btn active" onclick="navigateToScreen('screenHome')">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <span class="mt-0.5">الرئيسية</span>
+      </button>
+
+      <!-- 2. الأقسام -->
+      <button class="nav-btn" onclick="scrollToCategories()">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        <span class="mt-0.5">الأقسام</span>
+      </button>
+
+      <!-- 3. Central Glowing Circular Jewel Action Button (الصورة 1: يفتح شاشة التسجيل بالاسم ورقم الهاتف) -->
+      <button class="nav-center-action" onclick="openUserProfileModal()" title="تسجيل الدخول والملف الشخصي 👑">
+        <svg class="w-6 h-6 text-black" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2l2.4 6.9L21 9.5l-5.3 4.6 1.7 7.1-5.4-3.6-5.4 3.6 1.7-7.1L3 9.5l6.6-.6L12 2z"/>
+        </svg>
+      </button>
+
+      <!-- 4. السلة (أيقونة السلة الفخمة - الصورة 5) -->
+      <button class="nav-btn relative" onclick="openCartDrawer()">
+        <img src="assets/images/cart_speed_red.png" alt="السلة" class="w-5 h-5 object-contain" />
+        <span class="mt-0.5">السلة</span>
+        <span id="navCartBadgeCount" class="absolute -top-1 right-2 w-4 h-4 rounded-full bg-hk-gold text-black text-[9px] font-mono font-bold flex items-center justify-center">0</span>
+      </button>
+
+      <!-- 5. حسابي (الملف الشخصي) -->
+      <button onclick="openUserProfileModal()" class="nav-btn text-[#0E6466]">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        <span class="mt-0.5">حسابي</span>
+      </button>
+    </nav>
+
+    <!-- ═════════════════════════════════════════════════════════════════════════
+         WORKING SLIDE-IN CART DRAWER (سلة المقتنيات الملكية)
+         ═════════════════════════════════════════════════════════════════════════ -->
+    <div id="cartDrawerOverlay" class="cart-drawer-overlay" onclick="closeCartDrawer(event)">
+      <div class="cart-drawer-sheet" onclick="event.stopPropagation()">
+        <!-- Header مع أيقونة السلة الفخمة (الصورة 5) -->
+        <div class="p-4 border-b border-gray-100 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <img src="assets/images/cart_speed_red.png" alt="سلة" class="w-5 h-5 object-contain" />
+            <h3 class="font-heading font-black text-sm text-gray-900">سلتك العطرية</h3>
+          </div>
+          <button onclick="closeCartDrawer()" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 text-sm font-bold">✕</button>
+        </div>
+
+        <!-- Items Area -->
+        <div class="p-4 overflow-y-auto max-h-[50vh] space-y-3" id="cartItemsList">
+          <!-- Dynamically populated via JS -->
+        </div>
+
+        <!-- Footer & Checkout Trigger (تم حذف سطر التوصيل داخل عدن مجاناً كما طلب المستخدم) -->
+        <div class="p-4 border-t border-gray-100 bg-[#FAF9F6] space-y-2.5">
+          <div class="flex items-center justify-between text-sm font-heading font-black text-gray-900 pt-0.5">
+            <span>الإجمالي النهائي:</span>
+            <span id="cartDrawerTotal" class="text-base text-hk-gold-deep font-mono font-black">0.00 ر.س</span>
+          </div>
+
+          <!-- زر إرسال الطلب واعتماده (الصورة 5: زر أحمر ملكي فخم مع أيقونة الصح الخضراء 3D من الصورة 4) -->
+          <button onclick="openAppCheckoutModal()" class="w-full py-3.5 px-4 rounded-full bg-gradient-to-r from-[#8B0000] via-[#C9182B] to-[#7B0000] border border-amber-300/40 text-white hover:brightness-110 font-heading font-black text-xs shadow-[0_4px_18px_rgba(185,28,28,0.45)] flex items-center justify-center gap-2 active:scale-95 transition-all">
+            <img src="assets/images/check_icon_3d.png" alt="اعتماد" class="w-5 h-5 object-contain filter drop-shadow inline-block" />
+            <span>ارسال الطلب واعتماده</span>
+          </button>
+
+          <!-- زر الطلب السريع عبر واتساب -->
+          <button onclick="checkoutViaWhatsApp()" class="w-full py-2.5 rounded-full bg-gradient-to-r from-emerald-600 to-emerald-700 text-white font-heading font-black text-xs shadow-md flex items-center justify-center gap-2 active:scale-95 transition-all">
+            <span>طلب فوري ومباشر عبر واتساب 💬</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═════════════════════════════════════════════════════════════════════════
+         ORDER CHECKOUT MODAL (اعتماد الطلب للوحة التحكم)
+         ═════════════════════════════════════════════════════════════════════════ -->
+    <div id="appCheckoutModal" class="cart-drawer-overlay" onclick="closeAppCheckoutModal(event)">
+      <div class="cart-drawer-sheet" onclick="event.stopPropagation()">
+        
+        <!-- Form View -->
+        <div id="checkoutFormContent" class="p-4 space-y-3.5 text-right overflow-y-auto max-h-[80vh]">
+          <div class="flex items-center justify-between border-b border-gray-100 pb-2">
+            <h3 class="font-heading font-black text-sm text-gray-900 flex items-center gap-1.5">
+              <span>👑</span>
+              <span>ارسال الطلب واعتماده</span>
+            </h3>
+            <button onclick="closeAppCheckoutModal()" class="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-xs text-gray-500 font-bold">✕</button>
+          </div>
+
+          <!-- Customer Info Inputs -->
+          <div class="space-y-2">
+            <div>
+              <label class="block text-[11px] font-bold text-gray-700 mb-1">الاسم الكامل للعميل المستلم *</label>
+              <input id="appCustName" type="text" placeholder="أدخل اسمك الكريم..." class="w-full px-3 py-2 rounded-xl border border-gray-300 text-xs text-gray-900 focus:border-hk-gold outline-none bg-[#FAFAFA]" required />
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-gray-700 mb-1">رقم الهاتف (للتواصل والشحن) *</label>
+              <input id="appCustPhone" type="tel" placeholder="مثال: 966533281386" class="w-full px-3 py-2 rounded-xl border border-gray-300 text-xs text-gray-900 font-mono focus:border-hk-gold outline-none bg-[#FAFAFA]" required />
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-gray-700 mb-1">العنوان / المدينة *</label>
+              <input id="appCustCity" type="text" value="عدن" placeholder="مثال: عدن - كريتر، الشارع العام" class="w-full px-3 py-2 rounded-xl border border-gray-300 text-xs text-gray-900 focus:border-hk-gold outline-none bg-[#FAFAFA]" required />
+            </div>
+          </div>
+
+          <!-- Pay Type: Transfer vs Deposit (الصورة 4: خيارين إما إرسال حوالة وإما إيداع) -->
+          <div class="space-y-1.5">
+            <label class="block text-[11px] font-bold text-gray-700">نوع السداد المطلوب *</label>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <button type="button" id="btnPayTypeTransfer" onclick="selectPayType('transfer')" class="py-2.5 px-3 rounded-xl border border-hk-gold bg-[#1A1A1A] text-hk-gold-light font-bold flex items-center justify-center gap-1.5 shadow-sm transition-all">
+                <span>💸 إرسال حوالة</span>
+              </button>
+              <button type="button" id="btnPayTypeDeposit" onclick="selectPayType('deposit')" class="py-2.5 px-3 rounded-xl border border-gray-200 bg-white text-gray-700 font-bold flex items-center justify-center gap-1.5 transition-all">
+                <span>🏦 إيداع بنكي مباشر</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Bank Selection -->
+          <div class="space-y-1.5">
+            <label class="block text-[11px] font-bold text-gray-700">اختر طريقة السداد / البنك للتحويل:</label>
+            <div class="grid grid-cols-3 gap-1.5 text-xs">
+              <button type="button" onclick="selectAppBank('kuraimi', this)" class="app-bank-chip p-2 rounded-xl border border-hk-gold bg-[#1A1A1A] text-hk-gold-light font-bold flex flex-col items-center gap-0.5 shadow-sm">
+                <span>🏦 الكريمي</span>
+              </button>
+              <button type="button" onclick="selectAppBank('qutaibi', this)" class="app-bank-chip p-2 rounded-xl border border-gray-200 bg-white text-gray-700 font-bold flex flex-col items-center gap-0.5">
+                <span>🏛️ القطيبي</span>
+              </button>
+              <button type="button" onclick="selectAppBank('shilin', this)" class="app-bank-chip p-2 rounded-xl border border-gray-200 bg-white text-gray-700 font-bold flex flex-col items-center gap-0.5">
+                <span>📱 شلن</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Bank Account Details Box (محدث ومربوط بلوحة التحكم مباشرة) -->
+          <div class="p-3 rounded-xl bg-[#F7F4EE] border border-[#E5DECF] text-[11px] space-y-1.5">
+            <div class="flex items-center justify-between border-b border-gray-200 pb-1">
+              <span id="appBankTitle" class="font-bold text-hk-gold-deep">بنك الكريمي الإسلامي</span>
+              <button type="button" onclick="copyAppAccountNum()" class="text-[10px] bg-white border border-hk-gold/40 px-2 py-0.5 rounded text-hk-gold-deep font-bold hover:bg-hk-gold hover:text-white transition-colors">
+                نسخ الرقم 📋
+              </button>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-gray-500">اسم المستلم (الحساب):</span>
+              <span id="appBankRecipientName" class="font-bold text-gray-900">دار حكاية للعطور</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-gray-500">رقم الحساب:</span>
+              <span id="appBankAccNum" class="font-bold font-mono text-hk-gold-deep text-xs">3004892150</span>
+            </div>
+          </div>
+
+          <!-- بوكس إدخال رقم الحوالة أو رقم الإيداع (مطلب الصورة 4) -->
+          <div>
+            <label id="appTransferNumLabel" class="block text-[11px] font-bold text-gray-700 mb-1">
+              رقم الحوالة أو رقم الإشعار / السند *
+            </label>
+            <input 
+              id="appTransferNumber" 
+              type="text" 
+              placeholder="أدخل رقم الحوالة أو رقم قيد الإيداع البنكي..." 
+              class="w-full px-3 py-2.5 rounded-xl border border-gray-300 text-xs text-gray-900 font-mono font-bold focus:border-hk-gold outline-none bg-[#FAFAFA]" 
+              required 
+            />
+          </div>
+
+          <!-- إضافة سند إرسال الحوالة أو الإيداع (رفع صورة السند - مطلب الصورة 4) -->
+          <div>
+            <label class="block text-[11px] font-bold text-gray-700 mb-1">
+              إرفاق صورة سند الحوالة أو الإيداع (اختياري / موصى به) 📄
+            </label>
+            <input 
+              type="file" 
+              id="appReceiptFileInput" 
+              accept="image/*" 
+              class="hidden" 
+              onchange="handleReceiptFileSelected(event)" 
+            />
+            <button 
+              type="button" 
+              onclick="document.getElementById('appReceiptFileInput').click()" 
+              class="w-full py-2.5 px-3 border border-dashed border-[#B8945F] bg-[#FAF8F5] rounded-xl flex items-center justify-center gap-2 text-xs font-bold text-hk-gold-deep hover:bg-[#F3EDE3] transition-colors"
+            >
+              <span>📎 انقر لاختيار أو تصوير سند التحويل</span>
+            </button>
+
+            <!-- معاينة صورة السند عند الاختيار -->
+            <div id="receiptPreviewBox" class="hidden mt-2 p-2 bg-gray-50 rounded-xl border border-gray-200 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <img id="receiptPreviewImg" src="" alt="سند" class="w-10 h-10 object-cover rounded-lg border border-gray-300" />
+                <span id="receiptPreviewName" class="text-[10px] text-gray-600 truncate max-w-[150px]">سند الحوالة</span>
+              </div>
+              <button type="button" onclick="removeReceiptFile()" class="text-rose-600 text-xs font-bold px-2 py-1 hover:bg-rose-50 rounded-lg">حذف ✕</button>
+            </div>
+          </div>
+
+          <!-- Total & Confirm Submit Button (الصورة 3: المبلغ المطلوب باللون الأحمر الفاخر) -->
+          <div class="pt-2 border-t border-gray-100 flex items-center justify-between">
+            <span class="text-xs font-bold text-gray-600">المبلغ المطلوب سداده:</span>
+            <div class="flex items-baseline gap-1" dir="ltr">
+              <span id="appCheckoutTotalText" class="text-base font-mono font-black text-rose-600" dir="ltr">0.00</span>
+              <span id="appCheckoutTotalCurrency"><img src="assets/images/sar_symbol_red.svg" alt="ر.س" class="h-3.5 w-auto object-contain inline" /></span>
+            </div>
+          </div>
+
+          <button onclick="submitOrderToAdmin()" class="w-full py-3.5 px-4 rounded-full bg-gradient-to-r from-[#8B0000] via-[#C9182B] to-[#7B0000] border border-amber-300/40 text-white hover:brightness-110 font-heading font-black text-xs shadow-[0_4px_18px_rgba(185,28,28,0.45)] flex items-center justify-center gap-2 active:scale-95 transition-all">
+            <img src="assets/images/check_icon_3d.png" alt="اعتماد" class="w-5 h-5 object-contain filter drop-shadow inline-block" />
+            <span>ارسال الطلب واعتماده</span>
+          </button>
+        </div>
+
+        <!-- Success Screen View -->
+        <div id="checkoutSuccessContent" class="hidden p-6 text-center space-y-3.5">
+          <div class="w-14 h-14 rounded-full border border-hk-gold bg-[#1A1A1A] text-hk-gold-bright mx-auto flex items-center justify-center text-2xl shadow-lg">
+            ✓
+          </div>
+          <div>
+            <h4 class="font-heading font-black text-base text-gray-900">تم ارسال الطلب واعتماده بنجاح!</h4>
+            <p class="text-xs text-gray-500 mt-1">رقم طلبك في النظام: <span id="appSuccessOrderId" class="font-mono font-black text-hk-gold-deep">HK-2026-1042</span></p>
+            <p class="text-[11px] text-gray-400 mt-0.5">تم اعتماد الطلب وتسجيله مباشرة، وسيتواصل معك فريق دار حكاية فوراً للشحن والتوصيل.</p>
+          </div>
+
+          <div class="space-y-2 pt-2">
+            <a id="appSuccessWhatsAppBtn" href="#" target="_blank" class="w-full py-2.5 rounded-full bg-gradient-to-r from-emerald-600 to-emerald-700 text-white font-heading font-black text-xs shadow-md flex items-center justify-center gap-2">
+              <span>متابعة الطلب عبر واتساب 💬</span>
+            </a>
+            <button onclick="closeAppCheckoutModal(); navigateToScreen('screenHome');" class="w-full py-2.5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-heading font-bold text-xs">
+              <span>العودة للتسوق 🛍️</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ═════════════════════════════════════════════════════════════════════════
+         USER PROFILE / LOGIN MODAL (شاشة تسجيل الاسم ورقم الهاتف - مطلب المستخدم)
+         ═════════════════════════════════════════════════════════════════════════ -->
+    <div id="userProfileModal" class="cart-drawer-overlay" onclick="closeUserProfileModal(event)">
+      <div class="cart-drawer-sheet" onclick="event.stopPropagation()">
+        <div class="p-4 border-b border-gray-100 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-base">👑</span>
+            <h3 class="font-heading font-black text-sm text-gray-900">الملف الشخصي للعميل</h3>
+          </div>
+          <button onclick="closeUserProfileModal()" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 text-sm font-bold">✕</button>
+        </div>
+
+        <div class="p-5 space-y-3.5 text-right">
+          <div class="p-3 rounded-xl bg-[#F4F9F8] border border-[#D5EAE7] flex items-center gap-3">
+            <div class="w-12 h-12 rounded-full bg-[#0E6466] text-white flex items-center justify-center font-heading font-black text-lg shadow-sm">
+              <span id="profileModalAvatarLetter">👤</span>
+            </div>
+            <div>
+              <h4 class="font-heading font-bold text-xs text-gray-900">تسجيل بيانات العميل الملكي</h4>
+              <p class="text-[10px] text-gray-500 mt-0.5">يتم حفظ الاسم ورقم الهاتف في الترويسة العلوية ولتسهيل اعتماد الطلبات</p>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-bold text-gray-700 mb-1">الاسم الكريم *</label>
+            <input id="profileInputName" type="text" placeholder="أدخل اسمك الكريم..." class="w-full px-3 py-2.5 rounded-xl border border-gray-300 text-xs text-gray-900 focus:border-hk-gold outline-none bg-[#FAFAFA]" required />
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-bold text-gray-700 mb-1">رقم الهاتف (للتواصل والشحن) *</label>
+            <input id="profileInputPhone" type="tel" placeholder="أدخل رقم هاتفك..." class="w-full px-3 py-2.5 rounded-xl border border-gray-300 text-xs text-gray-900 font-mono focus:border-hk-gold outline-none bg-[#FAFAFA]" required />
+          </div>
+
+          <button onclick="saveUserProfile()" class="w-full py-3 rounded-full bg-gradient-to-r from-[#17140E] via-[#241F16] to-[#120F0A] border border-hk-gold text-hk-gold-light hover:brightness-125 font-heading font-black text-xs shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-all mt-2">
+            <span>حفظ وتأكيد البيانات ✨</span>
+          </button>
+
+          <button type="button" onclick="clearUserProfile()" class="w-full py-2 rounded-xl border border-gray-200 text-gray-500 hover:text-red-600 hover:border-red-300 text-[11px] font-bold transition-colors">
+            تسجيل الخروج / مسح الحساب 🚪
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Firebase v10 Compat SDK for Realtime Sync with Admin Dashboard -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+  <script src="assets/js/firebase-config.js"></script>
+  <script src="assets/js/firebase-service.js"></script>
+
+  <!-- ═════════════════════════════════════════════════════════════════════════
+       MASTER REALTIME JAVASCRIPT APPLICATION ENGINE
+       ═════════════════════════════════════════════════════════════════════════ -->
+  <script>
+    // Official Exchange Rate (افتراضي 413 ر.ي لكل 1 ر.س مع إمكانية التحديث من لوحة التحكم)
+    let officialExchangeRate = 413;
+    try {
+      const storedRate = localStorage.getItem('hikaya_exchange_rate');
+      if (storedRate && !isNaN(parseFloat(storedRate))) {
+        officialExchangeRate = parseFloat(storedRate);
+      }
+    } catch (e) {}
+
+    // Authentic Perfume Products Data (All 6 Luxury Bottles)
+    let PRODUCTS = [
+      {
+        id: 'prod_1792485175217',
+        name: 'ستار لايت',
+        category: 'men',
+        categoryName: 'عطور رجالية',
+        priceSAR: 50.00,
+        oldPriceSAR: 49.00,
+        priceYER: 20600,
+        oldPriceYER: 20500,
+        discount: '-20%',
+        ml: 50,
+        image: 'assets/images/uploads/prod_prod_1792485175217_main.jpg',
+        images: [
+          'assets/images/uploads/prod_prod_1792485175217_0.jpg'
+        ],
+        stock: 10,
+        rating: 5.0,
+        reviewsCount: 1,
+        subtitle: 'زجاجة فاخرة • 50 مل ماء عطر مركز',
+        desc: 'ثبات فوحان عطر مميز'
+      },
+      {
+        id: 'royal_oud',
+        name: 'دهن عود ملكي معتق',
+        category: 'oud',
+        categoryName: 'دهون عطر ملكي',
+        priceSAR: 330.00,
+        oldPriceSAR: 450.00,
+        priceYER: 136290,
+        oldPriceYER: 185850,
+        discount: '-27%',
+        image: 'assets/images/bottles_3d/royal_oud.png',
+        rating: 4.9,
+        reviewsCount: 142,
+        subtitle: 'تولة ملكية زجاجية فاخرة • 12 مل (ربع تولة معتقة)',
+        desc: 'دهن عود كمبودي سيلاني عتيق، مستخلص بأعلى درجات النقاء من أندر خشب العود الطبيعي المعتق، يفوح بعبير بخوري بلسمي دافئ يمنحك حضوراً ملكياً مهيباً.'
+      },
+      {
+        id: 'silk_musk',
+        name: 'مسك الحرير الصافي',
+        category: 'musk',
+        categoryName: 'مسك صافي',
+        priceSAR: 240.00,
+        oldPriceSAR: 320.00,
+        priceYER: 99120,
+        oldPriceYER: 132160,
+        discount: '-25%',
+        image: 'assets/images/bottles_3d/silk_musk.png',
+        rating: 5.0,
+        reviewsCount: 98,
+        subtitle: 'تولة مخملية نقية • 12 مل من المسك الأبيض البكر',
+        desc: 'نقاء الحرير والمسك الأبيض الفاخر مع نفحات منعشة من زهور الوادي والبودرة النقية، يمنحك إحساساً ملكياً بالنظافة والانتعاش طوال اليوم.'
+      },
+      {
+        id: 'hero_perfume',
+        name: 'إكسير الذهب الرجالي',
+        category: 'men',
+        categoryName: 'عطور رجالية',
+        priceSAR: 410.00,
+        oldPriceSAR: 520.00,
+        priceYER: 169330,
+        oldPriceYER: 214760,
+        discount: '-21%',
+        image: 'assets/images/bottles_3d/hero_perfume.png',
+        rating: 4.8,
+        reviewsCount: 112,
+        subtitle: 'زجاجة كريستال فاخرة • 100 مل ماء عطر مركز (Parfum)',
+        desc: 'عطر التوقيع الملكي لدار حكاية، يجمع بين بريق الزعفران الكشميري والورد الدمشقي مع عمق خشب الصندل والعنبر والعود الذهبي النادر.'
+      },
+      {
+        id: 'amber_royal',
+        name: 'عنبر السلطان الملكي',
+        category: 'oud',
+        categoryName: 'دهون عطر ملكي',
+        priceSAR: 350.00,
+        oldPriceSAR: 440.00,
+        priceYER: 144550,
+        oldPriceYER: 181720,
+        discount: '-20%',
+        image: 'assets/images/bottles_3d/amber_royal.png',
+        rating: 4.9,
+        reviewsCount: 86,
+        subtitle: 'تولة فاخرة محكمة الإغلاق • 12 مل عنبر أصيل',
+        desc: 'دفء العنبر الرمادي الممزوج بأفخر أنواع الراتنجات العطرية والمسك الحار، ثبات أسطوري ينبض بالفخامة والهيبة.'
+      },
+      {
+        id: 'oud_tola',
+        name: 'تولة العود والمسك الملكي',
+        category: 'oud',
+        categoryName: 'دهون عطر ملكي',
+        priceSAR: 210.00,
+        oldPriceSAR: 280.00,
+        priceYER: 86730,
+        oldPriceYER: 115640,
+        discount: '-25%',
+        image: 'assets/images/bottles_3d/oud_tola.png',
+        rating: 4.7,
+        reviewsCount: 64,
+        subtitle: 'تولة كلاسيكية عتيقة • 12 مل مزيج ملكي',
+        desc: 'توليفة بديعة تجمع نقاء المسك الأبيض مع دفء العود المعتق، خيار مثالي للاستخدام اليومي والمناسبات الخاصة.'
+      },
+      {
+        id: 'french_rose',
+        name: 'الورد الفرنسي النسائي',
+        category: 'women',
+        categoryName: 'عطور نسائية',
+        priceSAR: 250.00,
+        oldPriceSAR: 330.00,
+        priceYER: 103250,
+        oldPriceYER: 136290,
+        discount: '-24%',
+        image: 'assets/images/bottles_3d/french_rose.png',
+        rating: 4.9,
+        reviewsCount: 78,
+        subtitle: 'زجاجة فرنسية مذهبة • 100 مل أو دو بارفان',
+        desc: 'نفحات باريسية راقية تستحضر عبير ورود غراس في الصباح الباكر ممتزجة مع الفانيليا والأخشاب البيضاء الناعمة.'
+      }
+    ];
+
+    // Load instantly from LocalStorage if available (0ms offline & file:// support)
+    try {
+      const storedProds = localStorage.getItem('hikaya_products');
+      if (storedProds) {
+        const parsed = JSON.parse(storedProds);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          PRODUCTS = parsed;
+        }
+      }
+    } catch (e) {}
+
+    // API Base URL helper (supports file:/// protocol by routing to local server)
+    function getAppApiBase() {
+      if (window.location.protocol === 'file:') {
+        return 'http://localhost:8080';
+      }
+      return '';
+    }
+
+    let lastLoadedProductsVersion = null;
+
+    // State
+    let currentCurrency = 'SAR'; // 'SAR' or 'YER'
+    let currentFilter = 'all';
+    let cart = [];
+    let favorites = [];
+    let selectedProduct = PRODUCTS[0];
+    let detailQty = 1;
+    let selectedDetailMl = 100;
+    let isDetailCustomMl = false;
+    let currentUser = null; // لا يوجد مستخدم افتراضي - يظهر فقط بعد تسجيل العميل
+
+    // Helper to format luxury red prices (الصورة 5: الأرقام والكسور العشرية على اليمين حصراً)
+    function formatLuxuryRedPrice(amount, isSAR = true, sizeClass = 'text-[15px] sm:text-base') {
+      if (isSAR) {
+        const str = Number(amount).toFixed(2);
+        const parts = str.split('.');
+        return `<span dir="ltr" class="inline-flex items-baseline font-mono font-black text-rose-600"><span class="${sizeClass} font-black leading-none">${parts[0]}</span><span class="text-[11px] font-bold text-rose-500">.${parts[1]}</span></span>`;
+      } else {
+        const str = Math.round(amount).toLocaleString('en-US');
+        return `<span dir="ltr" class="inline-flex items-baseline font-mono font-black text-rose-600"><span class="${sizeClass} font-black leading-none">${str}</span></span>`;
+      }
+    }
+
+    // Initialize App & Live Sync Engine
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Instant LocalStorage Load
+      try {
+        const localProds = localStorage.getItem('hikaya_products');
+        if (localProds) {
+          const parsed = JSON.parse(localProds);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            PRODUCTS = parsed;
+          }
+        }
+      } catch (e) {}
+
+      loadUserProfile();
+      loadAppBankAccounts();
+      renderProductsGrid();
+      updateCartBadge();
+      startCountdown();
+
+      // Initial Fetch from Server (Immediate load)
+      loadProductsFromServer(true);
+      loadCategoriesFromServer();
+      loadExchangeRateFromServer();
+
+      // Cross-tab immediate sync via storage events (0ms)
+      window.addEventListener('storage', (e) => {
+        if (e.key === 'hikaya_products' || e.key === 'hikaya_products_version' || e.key === 'hikaya_exchange_rate' || e.key === 'hikaya_categories' || e.key === 'hikaya_bank_accounts') {
+          try {
+            const localProds = localStorage.getItem('hikaya_products');
+            if (localProds) {
+              const parsed = JSON.parse(localProds);
+              if (Array.isArray(parsed) && parsed.length > 0) {
+                PRODUCTS = parsed;
+                filterCategory(currentFilter);
+              }
+            }
+          } catch (err) {}
+          loadProductsFromServer(true);
+          loadCategoriesFromServer();
+          loadExchangeRateFromServer();
+          loadAppBankAccounts();
+        }
+      });
+
+      // Periodic Lightweight Sync with Admin Dashboard
+      setInterval(() => {
+        // Fast local version check first
+        try {
+          const localVer = localStorage.getItem('hikaya_products_version');
+          if (localVer && localVer !== lastLoadedProductsVersion) {
+            lastLoadedProductsVersion = localVer;
+            const localProds = localStorage.getItem('hikaya_products');
+            if (localProds) {
+              const parsed = JSON.parse(localProds);
+              if (Array.isArray(parsed) && parsed.length > 0) {
+                PRODUCTS = parsed;
+                filterCategory(currentFilter);
+              }
+            }
+          }
+        } catch (e) {}
+
+        loadProductsFromServer(false);
+      }, 1500);
+    });
+
+    // ═════════════════════════════════════════════════════════════════════════
+    // SERVER REALTIME SYNC (مزامنة فورية وتعديل مباشر من لوحة التحكم بدون ثقل)
+    // ═════════════════════════════════════════════════════════════════════════
+    async function loadProductsFromServer(rerender = true) {
+      // 1. Ultra-light version check to avoid transferring full catalog every 1.5s
+      try {
+        const verRes = await fetch(getAppApiBase() + '/api/products-version?t=' + Date.now());
+        if (verRes.ok) {
+          const verData = await verRes.json();
+          if (verData && verData.version && verData.version === lastLoadedProductsVersion) {
+            // Nothing changed on server, return immediately without downloading products!
+            return;
+          }
+          if (verData && verData.version) {
+            lastLoadedProductsVersion = verData.version;
+          }
+        }
+      } catch (e) {
+        // Server might not be running or offline; fallback to localStorage / Firebase
+      }
+
+      // 2. Fetch products if version changed or initial load (Local Server API)
+      let srvProducts = null;
+      try {
+        const res = await fetch(getAppApiBase() + '/api/products?t=' + Date.now());
+        if (res.ok) {
+          srvProducts = await res.json();
+        }
+      } catch (err) {}
+
+      // 3. Fallback to static products.json (works seamlessly on GitHub Pages static hosting!)
+      if (!srvProducts || !Array.isArray(srvProducts) || srvProducts.length === 0) {
+        try {
+          const staticRes = await fetch('products.json?t=' + Date.now());
+          if (staticRes.ok) {
+            srvProducts = await staticRes.json();
+          }
+        } catch (staticErr) {}
+      }
+
+      if (Array.isArray(srvProducts) && srvProducts.length > 0) {
+        const isDiff = srvProducts.length !== PRODUCTS.length || 
+          srvProducts.some((p, i) => !PRODUCTS[i] || p.id !== PRODUCTS[i].id || p.priceSAR !== PRODUCTS[i].priceSAR || p.priceYER !== PRODUCTS[i].priceYER || p.name !== PRODUCTS[i].name);
+        
+        if (isDiff || PRODUCTS.length === 0) {
+          PRODUCTS = srvProducts;
+          try {
+            localStorage.setItem('hikaya_products', JSON.stringify(PRODUCTS));
+          } catch (e) {}
+          if (rerender) filterCategory(currentFilter);
+          if (selectedProduct) {
+            const updated = PRODUCTS.find(p => p.id === selectedProduct.id);
+            if (updated) {
+              selectedProduct = updated;
+              if (document.getElementById('productDetailDrawer')?.classList.contains('open')) {
+                updateDetailPriceDisplay();
+              }
+            }
+          }
+        }
+      } else {
+        // Offline / file:// fallback
+        try {
+          const localProds = localStorage.getItem('hikaya_products');
+          if (localProds) {
+            const parsed = JSON.parse(localProds);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              PRODUCTS = parsed;
+              if (rerender) filterCategory(currentFilter);
+            }
+          }
+        } catch (e) {}
+      }
+    }
+
+    async function loadCategoriesFromServer() {
+      try {
+        const localCats = localStorage.getItem('hikaya_categories');
+        if (localCats) {
+          const parsed = JSON.parse(localCats);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            renderCategoryChipsList(parsed);
+          }
+        }
+      } catch (e) {}
+
+      try {
+        const res = await fetch(getAppApiBase() + '/api/categories?t=' + Date.now());
+        if (res.ok) {
+          const srvCats = await res.json();
+          if (Array.isArray(srvCats) && srvCats.length > 0) {
+            try {
+              localStorage.setItem('hikaya_categories', JSON.stringify(srvCats));
+            } catch (e) {}
+            renderCategoryChipsList(srvCats);
+          }
+        }
+      } catch (err) {}
+    }
+
+    function renderCategoryChipsList(cats) {
+      const container = document.getElementById('categoryChipsList');
+      if (!container) return;
+      const currentActive = currentFilter;
+      container.innerHTML = `
+        <button onclick="filterCategory('all', this)" class="category-chip ${currentActive === 'all' ? 'active' : ''}">
+          الكل ✨
+        </button>
+        ${cats.map(c => `
+          <button onclick="filterCategory('${c.id}', this)" class="category-chip ${currentActive === c.id ? 'active' : ''}">
+            ${c.name} ${c.icon || ''}
+          </button>
+        `).join('')}
+      `;
+    }
+
+    async function loadExchangeRateFromServer() {
+      try {
+        const res = await fetch(getAppApiBase() + '/api/exchange-rate?t=' + Date.now());
+        if (res.ok) {
+          const srv = await res.json();
+          if (srv && srv.exchangeRate) {
+            const rate = Number(srv.exchangeRate);
+            if (rate > 0 && typeof exchangeRate !== 'undefined') {
+              exchangeRate = rate;
+            }
+          }
+        }
+      } catch (err) {}
+    }
+
+    // ═════════════════════════════════════════════════════════════════════════
+    // USER PROFILE & LOGIN (الصورة 2: لا يظهر شيء إلا إذا سجل العميل بنفسه عبر الزر الأوسط)
+    // ═════════════════════════════════════════════════════════════════════════
+    function loadUserProfile() {
+      try {
+        const stored = localStorage.getItem('hikaya_user');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed && parsed.name && parsed.name.trim() && parsed.phone && parsed.phone.trim()) {
+            currentUser = parsed;
+          }
+        }
+      } catch (e) {}
+      updateUserHeaderDisplay();
+    }
+
+    function updateUserHeaderDisplay() {
+      const statusBar = document.getElementById('userProfileStatusBar');
+      if (!currentUser || !currentUser.name || !currentUser.phone) {
+        if (statusBar) statusBar.classList.add('hidden');
+        return;
+      }
+
+      if (statusBar) statusBar.classList.remove('hidden');
+
+      const name = currentUser.name.trim();
+      const phone = currentUser.phone.trim();
+      const initial = name.charAt(0) || '👤';
+
+      const nameEl = document.getElementById('userHeaderName');
+      const phoneEl = document.getElementById('userHeaderPhone');
+      const avatarEl = document.getElementById('userHeaderAvatarLetter');
+      const modalAvatarEl = document.getElementById('profileModalAvatarLetter');
+      const custNameInput = document.getElementById('appCustName');
+      const custPhoneInput = document.getElementById('appCustPhone');
+
+      if (nameEl) nameEl.textContent = name;
+      if (phoneEl) phoneEl.textContent = phone;
+      if (avatarEl) avatarEl.textContent = initial;
+      if (modalAvatarEl) modalAvatarEl.textContent = initial;
+      if (custNameInput && !custNameInput.value) custNameInput.value = name;
+      if (custPhoneInput && !custPhoneInput.value) custPhoneInput.value = phone;
+    }
+
+    function openUserProfileModal() {
+      const nameInput = document.getElementById('profileInputName');
+      const phoneInput = document.getElementById('profileInputPhone');
+      if (nameInput) nameInput.value = currentUser ? (currentUser.name || '') : '';
+      if (phoneInput) phoneInput.value = currentUser ? (currentUser.phone || '') : '';
+
+      const modal = document.getElementById('userProfileModal');
+      if (modal) modal.classList.add('open');
+    }
+
+    function closeUserProfileModal(e) {
+      if (e && e.target !== document.getElementById('userProfileModal')) return;
+      const modal = document.getElementById('userProfileModal');
+      if (modal) modal.classList.remove('open');
+    }
+
+    function saveUserProfile() {
+      const nameInput = document.getElementById('profileInputName');
+      const phoneInput = document.getElementById('profileInputPhone');
+      const name = nameInput ? nameInput.value.trim() : '';
+      const phone = phoneInput ? phoneInput.value.trim() : '';
+
+      if (!name) {
+        showToast('يرجى كتابة الاسم الكريم ⚠️');
+        if (nameInput) nameInput.focus();
+        return;
+      }
+      if (!phone) {
+        showToast('يرجى كتابة رقم الهاتف ⚠️');
+        if (phoneInput) phoneInput.focus();
+        return;
+      }
+
+      currentUser = { name, phone };
+      try {
+        localStorage.setItem('hikaya_user', JSON.stringify(currentUser));
+      } catch (e) {}
+
+      updateUserHeaderDisplay();
+      closeUserProfileModal();
+      showToast(`مرحباً بك يا ${name} في دار حكاية 👑`);
+    }
+
+    function clearUserProfile() {
+      currentUser = null;
+      try {
+        localStorage.removeItem('hikaya_user');
+      } catch (e) {}
+      const nameInput = document.getElementById('profileInputName');
+      const phoneInput = document.getElementById('profileInputPhone');
+      if (nameInput) nameInput.value = '';
+      if (phoneInput) phoneInput.value = '';
+      updateUserHeaderDisplay();
+      closeUserProfileModal();
+      showToast('تم تسجيل الخروج بنجاح. أنت تتصفح كزائر الآن 👑');
+    }
+
+    // SPA Navigation Function
+    function navigateToScreen(screenId) {
+      document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById(screenId);
+      if (target) {
+        target.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // Update Bottom Nav Active Indicator
+      const nav = document.getElementById('mainBottomNav');
+      if (nav) nav.style.display = 'flex';
+    }
+
+    // Render Product Cards Grid (الصورة 3: السعر بالأحمر مع تكبير الرقم وتصغير الفواصل + عرض الصورة الأولى فقط بالبطاقة)
+    function renderProductsGrid(items = PRODUCTS) {
+      const container = document.getElementById('productsGridContainer');
+      if (!container) return;
+
+      if (!items || items.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-2 py-12 text-center text-gray-400 space-y-2">
+            <span class="text-3xl block">💎</span>
+            <p class="text-xs font-heading font-bold">لا توجد عطور متوفرة في هذا القسم حالياً</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = items.map(p => {
+        const priceFormatted = formatLuxuryRedPrice(currentCurrency === 'SAR' ? (p.priceSAR || 0) : (p.priceYER || 0), currentCurrency === 'SAR');
+        const oldPriceSARVal = (p.oldPriceSAR !== undefined && p.oldPriceSAR !== null && !isNaN(p.oldPriceSAR)) ? Number(p.oldPriceSAR) : Math.round((p.priceSAR || 0) * 1.25);
+        const oldPriceYERVal = (p.oldPriceYER !== undefined && p.oldPriceYER !== null && !isNaN(p.oldPriceYER)) ? Number(p.oldPriceYER) : Math.round((p.priceYER || 0) * 1.25);
+        const oldPrice = currentCurrency === 'SAR' ? oldPriceSARVal.toFixed(2) : oldPriceYERVal.toLocaleString('en-US');
+        const currSymbol = currentCurrency === 'SAR' ? `<img src="assets/images/sar_symbol_red.svg" alt="ر.س" class="h-3 w-auto object-contain inline" />` : '<span class="text-[10px] font-bold text-rose-600 font-mono">ر.ي</span>';
+        
+        // الصورة الأولى فقط في بطاقة المنتج
+        const cardThumb = (p.images && p.images.length > 0) ? p.images[0] : (p.image || 'assets/images/bottles_3d/royal_oud.png');
+
+        return `
+          <div class="product-card-ui" onclick="openProductById('${p.id}')">
+            <!-- Floating Red Discount Badge -->
+            <span class="absolute top-2.5 right-2.5 bg-rose-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded-md shadow-sm z-10 font-mono">
+              ${p.discount || '-20%'}
+            </span>
+
+            <!-- Image Container with Floating (+) Button (الصورة الأولى) -->
+            <div class="relative h-32 flex items-center justify-center bg-[#FDFCFB] rounded-xl overflow-hidden mb-2">
+              <img src="${cardThumb}" alt="${p.name}" class="h-28 w-auto object-contain" onerror="this.src='assets/images/bottles_3d/royal_oud.png'" />
+              <!-- Floating Add (+) Button -->
+              <button type="button" onclick="event.stopPropagation(); addToCart('${p.id}', 1, 100)" class="floating-add-btn" title="أضف للسلة">
+                +
+              </button>
+            </div>
+
+            <!-- Product Title in Bold Arabic -->
+            <h4 class="font-heading font-black text-xs text-gray-900 truncate">${p.name}</h4>
+            <p class="text-[9px] text-gray-400 mt-0.5 truncate">${p.subtitle || p.desc || ''}</p>
+
+            <!-- Price with Official Currency Symbol (الصورة 5: الأرقام والكسور على اليمين وشعار الريال بالأحمر) -->
+            <div class="mt-2 flex items-baseline justify-between pt-1 border-t border-gray-100">
+              <div class="flex items-baseline gap-1" dir="ltr">
+                ${priceFormatted}
+                ${currSymbol}
+              </div>
+              <span class="text-[10px] font-mono text-gray-400 line-through">${oldPrice}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Filter by Category
+    function filterCategory(cat, btn) {
+      currentFilter = cat;
+      if (btn) {
+        document.querySelectorAll('#categoryChipsList .category-chip').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+      } else {
+        document.querySelectorAll('#categoryChipsList .category-chip').forEach(c => {
+          const onclickAttr = c.getAttribute('onclick') || '';
+          if (onclickAttr.includes(`'${cat}'`)) {
+            c.classList.add('active');
+          } else {
+            c.classList.remove('active');
+          }
+        });
+      }
+
+      if (cat === 'all') {
+        renderProductsGrid(PRODUCTS);
+        const countEl = document.getElementById('productsCountLabel');
+        if (countEl) countEl.textContent = `${PRODUCTS.length} عطور ملكية`;
+      } else {
+        const filtered = PRODUCTS.filter(p => p.category === cat);
+        renderProductsGrid(filtered);
+        const countEl = document.getElementById('productsCountLabel');
+        if (countEl) countEl.textContent = `${filtered.length} عطور`;
+      }
+    }
+
+    // Live Search
+    function handleSearch(query) {
+      const q = (query || '').trim().toLowerCase();
+      if (!q) {
+        filterCategory(currentFilter);
+        return;
+      }
+      const results = PRODUCTS.filter(p => p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q));
+      renderProductsGrid(results);
+      document.getElementById('productsCountLabel').textContent = `${results.length} نتائج بحث`;
+    }
+
+    // ═════════════════════════════════════════════════════════════════════════
+    // MULTI-IMAGE TOUCH SWIPE GALLERY (تسحب بيدك يمين يسار للتنقل بين الصور)
+    // ═════════════════════════════════════════════════════════════════════════
+    let currentGalleryImages = [];
+    let currentGalleryIndex = 0;
+
+    function setupGallery(images) {
+      currentGalleryImages = (images && images.length > 0) ? images : ['assets/images/bottles_3d/royal_oud.png'];
+      currentGalleryIndex = 0;
+      updateGallerySlide();
+      attachGalleryTouchListeners();
+    }
+
+    function updateGallerySlide() {
+      const imgEl = document.getElementById('detailImg');
+      const counterEl = document.getElementById('galleryCounterBadge');
+      const dotsEl = document.getElementById('galleryDotsContainer');
+      const prevBtn = document.getElementById('galleryPrevBtn');
+      const nextBtn = document.getElementById('galleryNextBtn');
+
+      if (imgEl) {
+        imgEl.style.opacity = '0';
+        setTimeout(() => {
+          imgEl.src = currentGalleryImages[currentGalleryIndex];
+          imgEl.style.opacity = '1';
+        }, 100);
+      }
+
+      if (counterEl) {
+        counterEl.textContent = `${currentGalleryIndex + 1} / ${currentGalleryImages.length}`;
+      }
+
+      if (prevBtn && nextBtn) {
+        if (currentGalleryImages.length > 1) {
+          prevBtn.classList.remove('hidden');
+          nextBtn.classList.remove('hidden');
+        } else {
+          prevBtn.classList.add('hidden');
+          nextBtn.classList.add('hidden');
+        }
+      }
+
+      if (dotsEl) {
+        if (currentGalleryImages.length > 1) {
+          dotsEl.innerHTML = currentGalleryImages.map((_, i) => `
+            <button type="button" onclick="goToGalleryIndex(${i})" class="h-2 rounded-full transition-all ${i === currentGalleryIndex ? 'bg-[#8C6D3F] w-5' : 'bg-gray-300 w-2'}"></button>
+          `).join('');
+        } else {
+          dotsEl.innerHTML = '';
+        }
+      }
+    }
+
+    function galleryNextImage() {
+      if (currentGalleryImages.length <= 1) return;
+      currentGalleryIndex = (currentGalleryIndex + 1) % currentGalleryImages.length;
+      updateGallerySlide();
+    }
+
+    function galleryPrevImage() {
+      if (currentGalleryImages.length <= 1) return;
+      currentGalleryIndex = (currentGalleryIndex - 1 + currentGalleryImages.length) % currentGalleryImages.length;
+      updateGallerySlide();
+    }
+
+    function goToGalleryIndex(idx) {
+      currentGalleryIndex = idx;
+      updateGallerySlide();
+    }
+
+    // Touch swipe gestures (تسحب بيدك يمين يسار)
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchEndX = 0;
+    let touchEndY = 0;
+
+    function attachGalleryTouchListeners() {
+      const container = document.getElementById('detailGalleryContainer');
+      if (!container || container._hasTouchListeners) return;
+      container._hasTouchListeners = true;
+
+      container.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+      }, { passive: true });
+
+      container.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        touchEndY = e.changedTouches[0].screenY;
+        handleGallerySwipe();
+      }, { passive: true });
+    }
+
+    function handleGallerySwipe() {
+      const diffX = touchEndX - touchStartX;
+      const diffY = touchEndY - touchStartY;
+      if (Math.abs(diffX) > 35 && Math.abs(diffX) > Math.abs(diffY)) {
+        if (diffX < 0) {
+          galleryNextImage(); // Swiped left -> next image
+        } else {
+          galleryPrevImage(); // Swiped right -> prev image
+        }
+      }
+    }
+
+    // Open Product Detail Bottom Sheet (الصورة 5: تنبثق مثل حق السلة لنصف الشاشة بشكل فخم وبكافة التفاصيل)
+    function openProductById(id) {
+      const prod = PRODUCTS.find(p => p.id === id);
+      if (!prod) return;
+      selectedProduct = prod;
+      detailQty = 1;
+      selectedDetailMl = prod.ml || 100;
+      isDetailCustomMl = false;
+
+      // Setup multi-image gallery with touch swipe
+      const prodImages = (prod.images && prod.images.length > 0) ? prod.images : (prod.image ? [prod.image] : ['assets/images/bottles_3d/royal_oud.png']);
+      setupGallery(prodImages);
+      
+      const titleEl = document.getElementById('detailTitle');
+      if (titleEl) titleEl.textContent = prod.name;
+      
+      const subEl = document.getElementById('detailSubtitle');
+      if (subEl) subEl.textContent = prod.subtitle || `زجاجة فاخرة • ${prod.ml || 100} مل`;
+      
+      const descEl = document.getElementById('detailDescText');
+      if (descEl) descEl.textContent = prod.desc;
+      
+      const rateEl = document.getElementById('detailRatingText');
+      if (rateEl) rateEl.textContent = (prod.rating || 4.9).toFixed(1);
+      
+      const qtyEl = document.getElementById('detailQtyDisplay');
+      if (qtyEl) qtyEl.textContent = '1';
+      
+      const mlTextEl = document.getElementById('detailSelectedMlText');
+      if (mlTextEl) mlTextEl.textContent = `${prod.ml || 100} مل`;
+
+      const customInput = document.getElementById('detailCustomMlInput');
+      if (customInput) customInput.value = '';
+
+      // Reset ML chips
+      document.querySelectorAll('.detail-ml-chip').forEach(c => {
+        c.className = 'detail-ml-chip py-1.5 px-2 rounded-xl border border-gray-200 bg-white text-gray-700 font-bold text-xs flex items-center justify-center gap-1 transition-all';
+      });
+      const chip100 = document.querySelectorAll('.detail-ml-chip')[2];
+      if (chip100) {
+        chip100.className = 'detail-ml-chip active py-1.5 px-2 rounded-xl border border-hk-gold bg-[#1A1A1A] text-hk-gold-light font-bold text-xs flex items-center justify-center gap-1 shadow-sm transition-all';
+      }
+      
+      // Update Favorite Heart State
+      const isFav = favorites.includes(prod.id);
+      const heartBtn = document.getElementById('drawerHeartBtn') || document.getElementById('detailHeartBtn');
+      if (heartBtn) {
+        const svg = heartBtn.querySelector('svg');
+        if (isFav) {
+          heartBtn.classList.add('text-rose-500');
+          heartBtn.classList.remove('text-gray-400');
+          if (svg) svg.setAttribute('fill', 'currentColor');
+        } else {
+          heartBtn.classList.remove('text-rose-500');
+          heartBtn.classList.add('text-gray-400');
+          if (svg) svg.setAttribute('fill', 'none');
+        }
+      }
+
+      updateDetailPriceDisplay();
+      
+      // Open Product Detail Sheet
+      const drawer = document.getElementById('productDetailDrawer');
+      if (drawer) {
+        drawer.classList.add('open');
+      }
+    }
+
+    function closeProductDrawer(e) {
+      if (e && e.target !== document.getElementById('productDetailDrawer')) return;
+      const drawer = document.getElementById('productDetailDrawer');
+      if (drawer) drawer.classList.remove('open');
+    }
+
+    // Toggle Collapsible in Detail Screen
+    function toggleDetailCollapsible() {
+      const body = document.getElementById('detailCollapsibleBody');
+      const chevron = document.getElementById('detailChevron');
+      body.classList.toggle('expanded');
+      chevron.classList.toggle('rotate-180');
+    }
+
+    // Toggle Favorite Detail
+    function toggleFavoriteDetail() {
+      const id = selectedProduct.id;
+      const idx = favorites.indexOf(id);
+      const heartBtn = document.getElementById('drawerHeartBtn') || document.getElementById('detailHeartBtn');
+      const svg = heartBtn ? heartBtn.querySelector('svg') : null;
+
+      if (idx > -1) {
+        favorites.splice(idx, 1);
+        if (heartBtn) {
+          heartBtn.classList.remove('text-rose-500');
+          heartBtn.classList.add('text-gray-400');
+        }
+        if (svg) svg.setAttribute('fill', 'none');
+        showToast('تمت الإزالة من المفضلة');
+      } else {
+        favorites.push(id);
+        if (heartBtn) {
+          heartBtn.classList.add('text-rose-500');
+          heartBtn.classList.remove('text-gray-400');
+        }
+        if (svg) svg.setAttribute('fill', 'currentColor');
+        showToast('تمت الإضافة إلى المفضلة ❤️');
+      }
+    }
+
+    // Change Detail Quantity
+    function changeDetailQty(delta) {
+      detailQty = Math.max(1, detailQty + delta);
+      document.getElementById('detailQtyDisplay').textContent = detailQty;
+      updateDetailPriceDisplay();
+    }
+
+    // ═════════════════════════════════════════════════════════════════════════
+    // ML CAPACITY SELECTION (الصورة 4: 30 أو 50 أو 100 أو يدوي)
+    // ═════════════════════════════════════════════════════════════════════════
+    function selectDetailMl(ml, btn) {
+      selectedDetailMl = ml;
+      isDetailCustomMl = false;
+      document.querySelectorAll('.detail-ml-chip').forEach(c => {
+        c.className = 'detail-ml-chip py-1.5 px-2 rounded-xl border border-gray-200 bg-white text-gray-700 font-bold text-xs flex items-center justify-center gap-1 transition-all';
+      });
+      if (btn) {
+        btn.className = 'detail-ml-chip active py-1.5 px-2 rounded-xl border border-hk-gold bg-[#1A1A1A] text-hk-gold-light font-bold text-xs flex items-center justify-center gap-1 shadow-sm transition-all';
+      }
+      const customInput = document.getElementById('detailCustomMlInput');
+      if (customInput) customInput.value = '';
+      const textEl = document.getElementById('detailSelectedMlText');
+      if (textEl) textEl.textContent = `${ml} مل`;
+      updateDetailPriceDisplay();
+    }
+
+    function onDetailCustomMlChange(val) {
+      const num = parseInt(val, 10);
+      if (!isNaN(num) && num > 0) {
+        selectedDetailMl = num;
+        isDetailCustomMl = true;
+        document.querySelectorAll('.detail-ml-chip').forEach(c => {
+          c.className = 'detail-ml-chip py-1.5 px-2 rounded-xl border border-gray-200 bg-white text-gray-700 font-bold text-xs flex items-center justify-center gap-1 transition-all';
+        });
+        const textEl = document.getElementById('detailSelectedMlText');
+        if (textEl) textEl.textContent = `${num} مل (يدوي)`;
+        updateDetailPriceDisplay();
+      }
+    }
+
+    function setCartItemMl(index, ml) {
+      if (!cart[index]) return;
+      cart[index].ml = ml;
+      cart[index].customMl = null;
+      const factor = ml / 100;
+      cart[index].priceSAR = Math.round((cart[index].baseSAR * factor) * 100) / 100;
+      cart[index].priceYER = Math.round(cart[index].baseYER * factor);
+      cart[index].cartItemId = `${cart[index].id}_${ml}ml`;
+      renderCartDrawerItems();
+    }
+
+    function setCartItemCustomMl(index, val) {
+      const num = parseInt(val, 10);
+      if (!cart[index] || isNaN(num) || num <= 0) return;
+      cart[index].ml = num;
+      cart[index].customMl = num;
+      const factor = num / 100;
+      cart[index].priceSAR = Math.round((cart[index].baseSAR * factor) * 100) / 100;
+      cart[index].priceYER = Math.round(cart[index].baseYER * factor);
+      cart[index].cartItemId = `${cart[index].id}_${num}ml`;
+      renderCartDrawerItems();
+    }
+
+    // Update Detail Total Price Display (الصورة 3: السعر بالأحمر الملكي الفاخر)
+    function updateDetailPriceDisplay() {
+      const baseSAR = selectedProduct.priceSAR;
+      const baseYER = selectedProduct.priceYER;
+      const factor = (selectedDetailMl || 100) / 100;
+      const unitPrice = currentCurrency === 'SAR' ? (baseSAR * factor) : (baseYER * factor);
+      const total = (unitPrice * detailQty);
+      
+      const priceEl = document.getElementById('detailTotalPriceText');
+      if (priceEl) priceEl.innerHTML = formatLuxuryRedPrice(total, currentCurrency === 'SAR', 'text-sm sm:text-base');
+
+      const currSymbolEl = document.getElementById('detailCurrencySymbol');
+      if (currSymbolEl) {
+        currSymbolEl.innerHTML = currentCurrency === 'SAR' 
+          ? `<img src="assets/images/sar_symbol_red.svg" alt="ر.س" class="h-3.5 w-auto object-contain inline" />` 
+          : `<span class="text-xs font-bold text-rose-600 font-mono">ر.ي</span>`;
+      }
+    }
+
+    // Add Current Detail to Cart
+    function addCurrentDetailToCart() {
+      addToCart(selectedProduct.id, detailQty, selectedDetailMl, isDetailCustomMl);
+      closeProductDrawer();
+      showToast(`تمت إضافة ${detailQty}x "${selectedProduct.name} (${selectedDetailMl} مل)" إلى السلة 👑`);
+    }
+
+    // Quick Add
+    function quickAddById(id) {
+      addToCart(id, 1, 100, false);
+      const prod = PRODUCTS.find(p => p.id === id);
+      showToast(`تمت إضافة "${prod.name}" إلى السلة`);
+    }
+
+    // Cart Management
+    function addToCart(productId, qty = 1, ml = 100, custom = false) {
+      const prod = PRODUCTS.find(p => p.id === productId);
+      if (!prod) return;
+
+      const factor = (ml || 100) / 100;
+      const priceSAR = Math.round((prod.priceSAR * factor) * 100) / 100;
+      const priceYER = Math.round(prod.priceYER * factor);
+
+      const cartItemId = `${prod.id}_${ml}ml`;
+      const existing = cart.find(item => item.cartItemId === cartItemId);
+      if (existing) {
+        existing.qty += qty;
+      } else {
+        cart.push({
+          cartItemId: cartItemId,
+          id: prod.id,
+          name: prod.name,
+          ml: ml || 100,
+          customMl: custom ? ml : null,
+          priceSAR: priceSAR,
+          priceYER: priceYER,
+          baseSAR: prod.priceSAR,
+          baseYER: prod.priceYER,
+          image: prod.image,
+          qty: qty
+        });
+      }
+
+      updateCartBadge();
+      showToast(`تمت إضافة "${prod.name} (${ml} مل)" إلى السلة`);
+    }
+
+    function updateCartBadge() {
+      const totalCount = cart.reduce((sum, item) => sum + item.qty, 0);
+      document.getElementById('navCartBadgeCount').textContent = totalCount;
+      document.querySelectorAll('.detailCartBadge').forEach(b => b.textContent = totalCount);
+    }
+
+    function openCartDrawer() {
+      renderCartDrawerItems();
+      document.getElementById('cartDrawerOverlay').classList.add('open');
+    }
+
+    function closeCartDrawer(e) {
+      if (e && e.target !== document.getElementById('cartDrawerOverlay')) return;
+      document.getElementById('cartDrawerOverlay').classList.remove('open');
+    }
+
+    function renderCartDrawerItems() {
+      const container = document.getElementById('cartItemsList');
+      if (!container) return;
+
+      if (cart.length === 0) {
+        container.innerHTML = `
+          <div class="py-10 text-center text-gray-400 space-y-3 flex flex-col items-center justify-center">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#FFF5F5] to-[#FEE2E2] border border-rose-200/80 flex items-center justify-center shadow-[0_4px_16px_rgba(201,24,43,0.12)]">
+              <img src="assets/images/cart_speed_red.png" alt="سلتك فارغة" class="w-10 h-10 object-contain filter drop-shadow-[0_2px_6px_rgba(201,24,43,0.25)]" />
+            </div>
+            <div>
+              <p class="text-xs font-heading font-black text-gray-800">سلتك العطرية فارغة حالياً</p>
+              <p class="text-[10px] text-gray-400 mt-0.5">اختر ما يناسب ذوقك الرفيع من مقتنيات حكاية الملكية</p>
+            </div>
+          </div>
+        `;
+        const emptyCurr = currentCurrency === 'SAR' ? `<img src="assets/images/sar_symbol_red.svg" alt="ر.س" class="h-3.5 w-auto object-contain inline" />` : '<span class="text-xs font-bold text-rose-600 font-mono">ر.ي</span>';
+        document.getElementById('cartDrawerTotal').innerHTML = `<div class="flex items-baseline gap-1" dir="ltr">${formatLuxuryRedPrice(0, currentCurrency === 'SAR', 'text-base font-black')} ${emptyCurr}</div>`;
+        return;
+      }
+
+      let grandTotal = 0;
+      container.innerHTML = cart.map((item, index) => {
+        const itemPrice = currentCurrency === 'SAR' ? item.priceSAR : item.priceYER;
+        const total = itemPrice * item.qty;
+        grandTotal += total;
+        const formattedTotal = formatLuxuryRedPrice(total, currentCurrency === 'SAR', 'text-xs font-black');
+        const currBadge = currentCurrency === 'SAR' ? `<img src="assets/images/sar_symbol_red.svg" alt="ر.س" class="h-2.5 w-auto object-contain inline" />` : '<span class="text-[9px] font-bold text-rose-600 font-mono">ر.ي</span>';
+
+        return `
+          <div class="flex items-start justify-between gap-3 p-3 rounded-xl border border-gray-100 bg-[#FAFAFA]">
+            <img src="${item.image}" alt="${item.name}" class="h-14 w-auto object-contain mt-1" />
+            <div class="flex-1 text-right min-w-0">
+              <div class="flex items-baseline justify-between gap-1">
+                <h5 class="text-xs font-heading font-black text-gray-900 truncate">${item.name}</h5>
+                <div class="flex items-baseline gap-1" dir="ltr">
+                  ${formattedTotal}
+                  ${currBadge}
+                </div>
+              </div>
+              
+              <!-- تحديد الملي يدوي / بوكس فارغ و 30 / 50 / 100 مل (الصورة 4) -->
+              <div class="mt-2 pt-2 border-t border-gray-200/60">
+                <div class="text-[10px] text-gray-500 font-bold mb-1">كم ملي تحتاج؟</div>
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <div class="inline-flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-0.5 shadow-2xs">
+                    <button type="button" onclick="setCartItemMl(${index}, 30)" class="px-2 py-0.5 rounded text-[10px] font-bold transition-all ${item.ml === 30 ? 'bg-[#1A1A1A] text-hk-gold-bright shadow-xs' : 'text-gray-600 hover:bg-gray-100'}">30</button>
+                    <button type="button" onclick="setCartItemMl(${index}, 50)" class="px-2 py-0.5 rounded text-[10px] font-bold transition-all ${item.ml === 50 ? 'bg-[#1A1A1A] text-hk-gold-bright shadow-xs' : 'text-gray-600 hover:bg-gray-100'}">50</button>
+                    <button type="button" onclick="setCartItemMl(${index}, 100)" class="px-2 py-0.5 rounded text-[10px] font-bold transition-all ${(!item.ml || item.ml === 100) ? 'bg-[#1A1A1A] text-hk-gold-bright shadow-xs' : 'text-gray-600 hover:bg-gray-100'}">100</button>
+                  </div>
+                  <!-- بوكس فارغ لتحديد الملي يدوي -->
+                  <div class="inline-flex items-center gap-1 bg-white border border-gray-300 rounded-lg px-2 py-0.5 shadow-2xs">
+                    <input type="number" min="1" max="1000" placeholder="يدوي" value="${item.customMl || ''}" oninput="setCartItemCustomMl(${index}, this.value)" class="w-11 text-center text-[10px] font-mono font-bold text-gray-900 bg-transparent outline-none focus:text-hk-gold-deep" title="تحديد الملي يدوياً" />
+                    <span class="text-[9px] text-gray-400">مل</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="flex flex-col items-center justify-between self-stretch">
+              <div class="flex items-center border border-gray-300 rounded-full px-2 py-0.5 bg-white text-xs shadow-xs">
+                <button onclick="changeCartItemQty(${index}, -1)" class="w-5 h-5 flex items-center justify-center font-bold text-gray-600 hover:text-black">-</button>
+                <span class="px-1.5 font-mono font-bold text-gray-900">${item.qty}</span>
+                <button onclick="changeCartItemQty(${index}, 1)" class="w-5 h-5 flex items-center justify-center font-bold text-gray-600 hover:text-black">+</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      const grandTotalFormatted = formatLuxuryRedPrice(grandTotal, currentCurrency === 'SAR', 'text-base sm:text-lg font-black');
+      const drawerCurr = currentCurrency === 'SAR' ? `<img src="assets/images/sar_symbol_red.svg" alt="ر.س" class="h-3.5 w-auto object-contain inline" />` : '<span class="text-xs font-bold text-rose-600 font-mono">ر.ي</span>';
+      document.getElementById('cartDrawerTotal').innerHTML = `<div class="flex items-baseline gap-1" dir="ltr">${grandTotalFormatted} ${drawerCurr}</div>`;
+    }
+
+    function changeCartItemQty(index, delta) {
+      if (!cart[index]) return;
+      cart[index].qty += delta;
+      if (cart[index].qty <= 0) {
+        cart.splice(index, 1);
+      }
+      updateCartBadge();
+      renderCartDrawerItems();
+    }
+
+    // Checkout via WhatsApp
+    function checkoutViaWhatsApp() {
+      if (cart.length === 0) {
+        showToast('سلتك فارغة!');
+        return;
+      }
+      let itemsText = cart.map(i => `• ${i.name} (${i.ml} مل - الكمية: ${i.qty})`).join('\n');
+      let totalText = document.getElementById('cartDrawerTotal').textContent;
+      let msg = encodeURIComponent(`مرحباً دار حكاية للعطور الملكية 👑\nالاسم: ${currentUser.name || ''}\nالهاتف: ${currentUser.phone || ''}\nأود إتمام طلبي من تطبيق الجوال:\n${itemsText}\nالإجمالي: ${totalText}`);
+      window.open(`https://wa.me/967777889900?text=${msg}`, '_blank');
+    }
+
+    // Toggle Currency
+    function toggleCurrency() {
+      currentCurrency = currentCurrency === 'SAR' ? 'YER' : 'SAR';
+      document.getElementById('currencyLabel').textContent = currentCurrency === 'SAR' ? 'ر.س' : 'ر.ي';
+      const profileCurr = document.getElementById('headerProfileCurrency');
+      if (profileCurr) profileCurr.textContent = currentCurrency === 'SAR' ? 'ر.س' : 'ر.ي';
+      renderProductsGrid();
+      if (document.getElementById('productDetailDrawer')?.classList.contains('open')) {
+        updateDetailPriceDisplay();
+      }
+      showToast(`تم تحويل العملة إلى: ${currentCurrency === 'SAR' ? 'الريال السعودي (ر.س)' : 'الريال اليمني (ر.ي)'}`);
+    }
+
+    // Scroll to Categories
+    function scrollToCategories() {
+      navigateToScreen('screenHome');
+      const el = document.getElementById('categoryChipsList');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Share Product
+    function shareProduct() {
+      if (navigator.share) {
+        navigator.share({
+          title: selectedProduct.name,
+          text: `اكتشف عطر "${selectedProduct.name}" من دار حكاية للعطور`,
+          url: window.location.href
+        }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(window.location.href);
+        showToast('تم نسخ الرابط لمشاركته 📋');
+      }
+    }
+
+    // Toast Notification Utility
+    function showToast(msg) {
+      const toast = document.getElementById('toastNotification');
+      const text = document.getElementById('toastMessage');
+      text.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2400);
+    }
+
+    function startCountdown() {}
+
+    // ═════════════════════════════════════════════════════════════════════════
+    // CHECKOUT MODAL & REALTIME ADMIN SYNC ENGINE (الصورة 3 و 4)
+    // ═════════════════════════════════════════════════════════════════════════
+    const APP_BANKS = {
+      kuraimi: { title: 'بنك الكريمي الإسلامي', num: '3004892150', name: 'دار حكاية للعطور' },
+      qutaibi: { title: 'بنك القطيبي الإسلامي', num: '1224590', name: 'دار حكاية للعطور' },
+      shilin: { title: 'محفظة شلن الذكية', num: '777889900', name: 'دار حكاية للعطور' }
+    };
+    let selectedAppBank = 'kuraimi';
+    let currentPayType = 'transfer'; // 'transfer' (حوالة) or 'deposit' (إيداع)
+    let selectedReceiptBase64 = null;
+
+    // Load Bank accounts in real-time from Server API / Firebase / LocalStorage
+    async function loadAppBankAccounts() {
+      try {
+        const res = await fetch(getAppApiBase() + '/api/banks?t=' + Date.now());
+        if (res.ok) {
+          const data = await res.json();
+          if (data && typeof data === 'object') {
+            Object.assign(APP_BANKS, data);
+            updateAppBankDisplay();
+          }
+        }
+      } catch (e) {
+        try {
+          const local = localStorage.getItem('hikaya_bank_accounts');
+          if (local) {
+            const parsed = JSON.parse(local);
+            if (parsed.kuraimi) APP_BANKS.kuraimi = { title: 'بنك الكريمي الإسلامي', num: parsed.kuraimi.accountNumber || APP_BANKS.kuraimi.num, name: parsed.kuraimi.accountName || APP_BANKS.kuraimi.name };
+            if (parsed.qutaibi) APP_BANKS.qutaibi = { title: 'بنك القطيبي الإسلامي', num: parsed.qutaibi.accountNumber || APP_BANKS.qutaibi.num, name: parsed.qutaibi.accountName || APP_BANKS.qutaibi.name };
+            if (parsed.shilin) APP_BANKS.shilin = { title: 'محفظة شلن الذكية', num: parsed.shilin.accountNumber || APP_BANKS.shilin.num, name: parsed.shilin.accountName || APP_BANKS.shilin.name };
+            updateAppBankDisplay();
+          }
+        } catch (err) {}
+      }
+    }
+
+    function updateAppBankDisplay() {
+      const info = APP_BANKS[selectedAppBank];
+      if (info) {
+        const titleEl = document.getElementById('appBankTitle');
+        const numEl = document.getElementById('appBankAccNum');
+        const nameEl = document.getElementById('appBankRecipientName');
+        if (titleEl) titleEl.textContent = info.title || '';
+        if (numEl) numEl.textContent = info.num || '';
+        if (nameEl) nameEl.textContent = info.name || 'دار حكاية للعطور';
+      }
+    }
+
+    function selectAppBank(bankKey, btnEl) {
+      selectedAppBank = bankKey;
+      document.querySelectorAll('.app-bank-chip').forEach(b => {
+        b.className = 'app-bank-chip p-2 rounded-xl border border-gray-200 bg-white text-gray-700 font-bold flex flex-col items-center gap-0.5';
+      });
+      if (btnEl) {
+        btnEl.className = 'app-bank-chip p-2 rounded-xl border border-hk-gold bg-[#1A1A1A] text-hk-gold-light font-bold flex flex-col items-center gap-0.5 shadow-sm';
+      } else {
+        const chips = document.querySelectorAll('.app-bank-chip');
+        if (bankKey === 'kuraimi' && chips[0]) chips[0].className = 'app-bank-chip p-2 rounded-xl border border-hk-gold bg-[#1A1A1A] text-hk-gold-light font-bold flex flex-col items-center gap-0.5 shadow-sm';
+        if (bankKey === 'qutaibi' && chips[1]) chips[1].className = 'app-bank-chip p-2 rounded-xl border border-hk-gold bg-[#1A1A1A] text-hk-gold-light font-bold flex flex-col items-center gap-0.5 shadow-sm';
+        if (bankKey === 'shilin' && chips[2]) chips[2].className = 'app-bank-chip p-2 rounded-xl border border-hk-gold bg-[#1A1A1A] text-hk-gold-light font-bold flex flex-col items-center gap-0.5 shadow-sm';
+      }
+      updateAppBankDisplay();
+    }
+
+    // Toggle Payment Type: Transfer vs Deposit (مطلب الصورة 4)
+    function selectPayType(type) {
+      currentPayType = type;
+      const btnTransfer = document.getElementById('btnPayTypeTransfer');
+      const btnDeposit = document.getElementById('btnPayTypeDeposit');
+      const label = document.getElementById('appTransferNumLabel');
+      const input = document.getElementById('appTransferNumber');
+
+      const activeClass = 'py-2.5 px-3 rounded-xl border border-hk-gold bg-[#1A1A1A] text-hk-gold-light font-bold flex items-center justify-center gap-1.5 shadow-sm transition-all';
+      const inactiveClass = 'py-2.5 px-3 rounded-xl border border-gray-200 bg-white text-gray-700 font-bold flex items-center justify-center gap-1.5 transition-all';
+
+      if (type === 'transfer') {
+        if (btnTransfer) btnTransfer.className = activeClass;
+        if (btnDeposit) btnDeposit.className = inactiveClass;
+        if (label) label.textContent = 'رقم الحوالة المالية (الرقم المرجعي) *';
+        if (input) input.placeholder = 'أدخل رقم الحوالة المالية الصادرة...';
+      } else {
+        if (btnTransfer) btnTransfer.className = inactiveClass;
+        if (btnDeposit) btnDeposit.className = activeClass;
+        if (label) label.textContent = 'رقم قيد أو إشعار الإيداع البنكي *';
+        if (input) input.placeholder = 'أدخل رقم قيد الإيداع البنكي أو رقم السند...';
+      }
+    }
+
+    // Receipt Attachment Handling (مطلب الصورة 4)
+    function handleReceiptFileSelected(e) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        selectedReceiptBase64 = evt.target.result;
+        const previewBox = document.getElementById('receiptPreviewBox');
+        const previewImg = document.getElementById('receiptPreviewImg');
+        const previewName = document.getElementById('receiptPreviewName');
+        if (previewImg) previewImg.src = evt.target.result;
+        if (previewName) previewName.textContent = file.name;
+        if (previewBox) previewBox.classList.remove('hidden');
+        showToast('تم إرفاق صورة السند بنجاح 📄');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeReceiptFile() {
+      selectedReceiptBase64 = null;
+      const input = document.getElementById('appReceiptFileInput');
+      if (input) input.value = '';
+      const previewBox = document.getElementById('receiptPreviewBox');
+      if (previewBox) previewBox.classList.add('hidden');
+      showToast('تم إلغاء إرفاق صورة السند');
+    }
+
+    function copyAppAccountNum() {
+      const numEl = document.getElementById('appBankAccNum');
+      const num = numEl ? numEl.textContent.trim() : '3004892150';
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(num);
+      }
+      showToast(`تم نسخ رقم الحساب (${num}) بنجاح 📋`);
+    }
+
+    function openAppCheckoutModal() {
+      if (cart.length === 0) {
+        showToast('سلتك العطرية فارغة حالياً! أضف عطراً أولاً');
+        return;
+      }
+      
+      // Calculate Grand Total
+      let total = 0;
+      cart.forEach(item => {
+        const p = currentCurrency === 'SAR' ? item.priceSAR : item.priceYER;
+        total += p * item.qty;
+      });
+      
+      // الصورة 3: تنسيق المبلغ باللون الأحمر الملكي
+      const totalEl = document.getElementById('appCheckoutTotalText');
+      if (totalEl) totalEl.innerHTML = formatLuxuryRedPrice(total, currentCurrency === 'SAR', 'text-base font-black');
+
+      const currEl = document.getElementById('appCheckoutTotalCurrency');
+      if (currEl) {
+        currEl.innerHTML = currentCurrency === 'SAR' 
+          ? `<img src="assets/images/sar_symbol_red.svg" alt="ر.س" class="h-3.5 w-auto object-contain inline" />` 
+          : `<span class="text-xs font-bold text-rose-600 font-mono">ر.ي</span>`;
+      }
+
+      // Pre-fill user data if registered
+      if (currentUser) {
+        const nameInput = document.getElementById('appCustName');
+        const phoneInput = document.getElementById('appCustPhone');
+        if (nameInput && !nameInput.value) nameInput.value = currentUser.name || '';
+        if (phoneInput && !phoneInput.value) phoneInput.value = currentUser.phone || '';
+      }
+
+      // Synchronize latest bank accounts from server
+      loadAppBankAccounts();
+
+      // Close Cart Drawer first
+      const cartOverlay = document.getElementById('cartDrawerOverlay');
+      if (cartOverlay) cartOverlay.classList.remove('open');
+
+      // Reset Modal Views
+      const formView = document.getElementById('checkoutFormContent');
+      const successView = document.getElementById('checkoutSuccessContent');
+      if (formView) formView.classList.remove('hidden');
+      if (successView) successView.classList.add('hidden');
+
+      // Open Modal
+      const modal = document.getElementById('appCheckoutModal');
+      if (modal) modal.classList.add('open');
+    }
+
+    function closeAppCheckoutModal(e) {
+      if (e && e.target !== document.getElementById('appCheckoutModal')) return;
+      const modal = document.getElementById('appCheckoutModal');
+      if (modal) modal.classList.remove('open');
+    }
+
+    async function submitOrderToAdmin() {
+      if (cart.length === 0) {
+        showToast('سلتك فارغة!');
+        return;
+      }
+
+      const nameInput = document.getElementById('appCustName');
+      const phoneInput = document.getElementById('appCustPhone');
+      const cityInput = document.getElementById('appCustCity');
+      const transferNumInput = document.getElementById('appTransferNumber');
+
+      const name = nameInput ? nameInput.value.trim() : '';
+      const phone = phoneInput ? phoneInput.value.trim() : '';
+      const city = cityInput ? cityInput.value.trim() : 'عدن';
+      const transferNumber = transferNumInput ? transferNumInput.value.trim() : '';
+
+      if (!name) {
+        showToast('يرجى إدخال اسم العميل الكريم ⚠️');
+        if (nameInput) nameInput.focus();
+        return;
+      }
+      if (!phone || phone.length < 6) {
+        showToast('يرجى إدخال رقم هاتف صحيح للتواصل ⚠️');
+        if (phoneInput) phoneInput.focus();
+        return;
+      }
+      if (!transferNumber) {
+        showToast(currentPayType === 'transfer' ? 'يرجى إدخال رقم الحوالة المالية ⚠️' : 'يرجى إدخال رقم إشعار/قيد الإيداع البنكي ⚠️');
+        if (transferNumInput) transferNumInput.focus();
+        return;
+      }
+
+      // Calculate totals in SAR and YER
+      let totalSAR = 0;
+      let totalYER = 0;
+      const items = cart.map(item => {
+        const lineSAR = (item.priceSAR || 0) * item.qty;
+        const lineYER = (item.priceYER || 0) * item.qty;
+        totalSAR += lineSAR;
+        totalYER += lineYER;
+        return {
+          name: item.name,
+          size: `${item.ml || 100} مل`,
+          qty: item.qty,
+          price: currentCurrency === 'SAR' ? lineSAR : lineYER
+        };
+      });
+
+      const orderId = 'HK-' + new Date().getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000);
+      const bankInfo = APP_BANKS[selectedAppBank] || {};
+
+      const orderData = {
+        id: orderId,
+        customerName: name,
+        phone: phone,
+        city: city || 'عدن',
+        items: items,
+        totalYER: totalYER,
+        totalSAR: totalSAR,
+        currency: currentCurrency,
+        bank: selectedAppBank,
+        bankTitle: bankInfo.title || selectedAppBank,
+        paymentType: currentPayType, // 'transfer' or 'deposit'
+        transferNumber: transferNumber,
+        receiptImage: selectedReceiptBase64 || (cart[0] ? cart[0].image : 'assets/images/bottles_3d/royal_oud.png'),
+        status: 'pending',
+        date: new Date().toISOString().replace('T', ' ').substring(0, 16),
+        adminNotes: `طلب معتمد من تطبيق الجوال (${currentPayType === 'transfer' ? 'حوالة' : 'إيداع بنكي'} - رقم: ${transferNumber}) 📱👑`
+      };
+
+      // 1. Send Order to Server API (/api/orders) for immediate synchronization
+      try {
+        await fetch(getAppApiBase() + '/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderData)
+        });
+      } catch (apiErr) {
+        console.warn('API /api/orders warn:', apiErr);
+      }
+
+      // 2. Save to LocalStorage (hikaya_orders) for local admin dashboard view
+      try {
+        let storedOrders = [];
+        const raw = localStorage.getItem('hikaya_orders');
+        if (raw) storedOrders = JSON.parse(raw);
+        storedOrders.unshift(orderData);
+        localStorage.setItem('hikaya_orders', JSON.stringify(storedOrders));
+      } catch (e) {
+        console.warn('LocalStorage save error:', e);
+      }
+
+      // 3. Realtime Sync with Firebase Database
+      if (typeof HikayaFirebaseService !== 'undefined' && HikayaFirebaseService.isAvailable()) {
+        try {
+          await HikayaFirebaseService.saveOrder(orderData);
+          console.log('✅ تم إرسال الطلب إلى Firebase بنجاح:', orderId);
+        } catch (fbErr) {
+          console.warn('Firebase order save warning:', fbErr);
+        }
+      }
+
+      // 4. Update Success Screen Elements
+      const successOrderIdEl = document.getElementById('appSuccessOrderId');
+      if (successOrderIdEl) successOrderIdEl.textContent = orderId;
+
+      const waBtn = document.getElementById('appSuccessWhatsAppBtn');
+      if (waBtn) {
+        const itemsSummary = cart.map(i => `• ${i.name} (${i.ml} مل × ${i.qty})`).join('%0A');
+        const formattedTotal = currentCurrency === 'SAR' ? totalSAR.toFixed(2) + ' ر.س' : totalYER.toLocaleString('en-US') + ' ر.ي';
+        const payTypeTitle = currentPayType === 'transfer' ? 'إرسال حوالة 💸' : 'إيداع بنكي مباشر 🏦';
+        const bankTitle = bankInfo.title || selectedAppBank;
+        const msg = `مرحباً دار حكاية للعطور الملكية 👑%0Aلقد قمت باعتماد الطلب رقم: *${orderId}*%0Aالاسم: ${encodeURIComponent(name)}%0Aالهاتف: ${phone}%0Aالمدينة: ${encodeURIComponent(city)}%0Aطريقة السداد: ${encodeURIComponent(payTypeTitle)} (${encodeURIComponent(bankTitle)})%0Aرقم الحوالة/الإيداع: ${encodeURIComponent(transferNumber)}%0Aالمنتجات:%0A${itemsSummary}%0Aالمبلغ المطلوب: ${encodeURIComponent(formattedTotal)}%0Aتم إرسال الطلب واعتماده في النظام بنجاح ✨.`;
+        waBtn.href = `https://wa.me/967777889900?text=${msg}`;
+      }
+
+      // 5. Switch to Success View
+      const formView = document.getElementById('checkoutFormContent');
+      const successView = document.getElementById('checkoutSuccessContent');
+      if (formView) formView.classList.add('hidden');
+      if (successView) successView.classList.remove('hidden');
+
+      // 6. Clear Cart & Reset form
+      cart = [];
+      updateCartBadge();
+      renderCartDrawerItems();
+      removeReceiptFile();
+      if (transferNumInput) transferNumInput.value = '';
+      showToast('تم إرسال الطلب واعتماده بنجاح! 👑');
+    }
+
+    // ═════════════════════════════════════════════════════════════════════════
+    // FIREBASE REALTIME CLOUD SYNC (مزامنة سحابية عالمية فورية لكافة الهواتف والمواقع)
+    // ═════════════════════════════════════════════════════════════════════════
+    function initAppFirebaseSync() {
+      if (typeof HikayaFirebaseService === 'undefined' || !HikayaFirebaseService.isAvailable()) {
+        setTimeout(initAppFirebaseSync, 300);
+        return;
+      }
+
+      console.log('⚡ [HIKAYA Firebase] تم الاتصال بالمزامنة السحابية المباشرة...');
+
+      // 1. Live Products Push (إضافة، تعديل، وحذف العطور ينعكس في كل الهواتف فوراً بدون تحديث)
+      HikayaFirebaseService.subscribeToProducts((liveProducts) => {
+        if (Array.isArray(liveProducts) && liveProducts.length > 0) {
+          console.log('🔄 [Firebase Push] تحديث قائمة العطور في التطبيق فورياً:', liveProducts.length);
+          PRODUCTS = liveProducts;
+          try {
+            localStorage.setItem('hikaya_products', JSON.stringify(PRODUCTS));
+            localStorage.setItem('hikaya_products_version', Date.now().toString());
+          } catch (e) {}
+          filterCategory(currentFilter);
+          if (selectedProduct) {
+            const updated = PRODUCTS.find(p => p.id === selectedProduct.id);
+            if (updated) {
+              selectedProduct = updated;
+              if (document.getElementById('productDetailDrawer')?.classList.contains('open')) {
+                updateDetailPriceDisplay();
+              }
+            }
+          }
+        }
+      });
+
+      // 2. Live Exchange Rate Subscription
+      HikayaFirebaseService.subscribeToExchangeRate((liveRate) => {
+        if (liveRate && !isNaN(liveRate) && liveRate > 0) {
+          officialExchangeRate = liveRate;
+          try {
+            localStorage.setItem('hikaya_exchange_rate', liveRate.toString());
+          } catch (e) {}
+          renderProductsGrid();
+        }
+      });
+
+      // 3. Live Bank Accounts Subscription
+      HikayaFirebaseService.subscribeToBanks((liveBanks) => {
+        if (liveBanks && typeof liveBanks === 'object') {
+          Object.assign(APP_BANKS, liveBanks);
+          updateAppBankDisplay();
+        }
+      });
+    }
+
+    // Launch Firebase Realtime Sync
+    initAppFirebaseSync();
+  </script>
+
+</body>
+</html>

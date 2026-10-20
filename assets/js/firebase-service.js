@@ -68,17 +68,46 @@ const HikayaFirebaseService = {
       if (val) {
         const list = Object.keys(val).map(key => {
           const item = val[key];
-          if (item && item.image && item.image.endsWith('.jpg')) {
+          if (item && item.image && item.image.endsWith('.jpg') && !item.image.includes('/uploads/') && !item.image.includes('data:')) {
             item.image = item.image.replace('assets/images/', 'assets/images/bottles_3d/').replace('.jpg', '.png');
+          }
+          if (item && !Array.isArray(item.images)) {
+            item.images = item.image ? [item.image] : ['assets/images/bottles_3d/royal_oud.png'];
           }
           return item;
         });
         callback(list);
+      } else {
+        callback([]);
       }
     }, err => {
       console.warn('⚠️ [HIKAYA Firebase] Products listener error:', err);
     });
     return ref;
+  },
+
+  async getProductsOnce() {
+    if (!this.isAvailable()) return null;
+    try {
+      const snapshot = await this.getDb().ref('products').once('value');
+      const val = snapshot.val();
+      if (val) {
+        return Object.keys(val).map(key => {
+          const item = val[key];
+          if (item && item.image && item.image.endsWith('.jpg') && !item.image.includes('/uploads/') && !item.image.includes('data:')) {
+            item.image = item.image.replace('assets/images/', 'assets/images/bottles_3d/').replace('.jpg', '.png');
+          }
+          if (item && !Array.isArray(item.images)) {
+            item.images = item.image ? [item.image] : ['assets/images/bottles_3d/royal_oud.png'];
+          }
+          return item;
+        });
+      }
+      return [];
+    } catch (e) {
+      console.warn('⚠️ [HIKAYA Firebase] getProductsOnce error:', e);
+      return null;
+    }
   },
 
   subscribeToOrders(callback) {
@@ -175,6 +204,24 @@ const HikayaFirebaseService = {
       return true;
     } catch (err) {
       console.error(`❌ [HIKAYA Firebase] تعذر حفظ المنتج:`, err);
+      return false;
+    }
+  },
+
+  async saveAllProducts(productsList) {
+    if (!this.isAvailable()) return false;
+    try {
+      const map = {};
+      if (Array.isArray(productsList)) {
+        productsList.forEach(p => {
+          if (p && p.id) map[p.id] = p;
+        });
+      }
+      await this.getDb().ref('products').set(map);
+      console.log('✅ [HIKAYA Firebase] تم حفظ وتحديث قائمة المنتجات كاملة في Firebase بنجاح');
+      return true;
+    } catch (err) {
+      console.error('❌ [HIKAYA Firebase] تعذر حفظ قائمة المنتجات كاملة:', err);
       return false;
     }
   },
