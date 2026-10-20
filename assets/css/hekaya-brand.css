@@ -1,0 +1,46 @@
+/* ==========================================================================
+   دار حكاية للعطور (HIKAYA Haute Parfumerie)
+   3. Brand Identity & Color System
+   Palette: Black, Pure White & Metallic Antique Gold (أبيض • ذهبي • أسود)
+   Typography: Almarai & Cairo (Modern Bold Saudi E-commerce App Style)
+   ========================================================================== */
+
+:root {
+  /* HIKAYA Obsidian Noir Surfaces */
+  --hk-noir-deep:      #050505;   /* الخلفية الرئيسية النقية */
+  --hk-noir-soft:      #0D0D0D;   /* خلفية ثانوية ناعمة */
+  --hk-noir-card:      #121212;   /* بطاقات العطور الزجاجية المعتمة */
+  --hk-noir-elevated:  #1A1A1A;   /* أسطح القوائم والنوافذ المنبثقة */
+
+  /* Pure White & Milk Accents (أبيض ناصع عالي التباين) */
+  --hk-white-pure:     #FFFFFF;   /* نصوص وعناوين بيضاء ساطعة */
+  --hk-white-soft:     #F5F5F7;   /* أبيض عاجي ناعم */
+  --hk-white-muted:    #D1D1D6;   /* نصوص فرعية رمادية فاتحة */
+  --hk-white-border:   rgba(255, 255, 255, 0.12);
+
+  /* HIKAYA Metallic Gold Spectrum (ذهبي معدني ساطع) */
+  --hk-gold-antique:   #D4AF37;   /* الذهبي الملكي الساطع */
+  --hk-gold-warm:      #E5C158;   /* ذهبي دافئ مشع */
+  --hk-gold-shimmer:   #F7E7A9;   /* ذهبي لامع براق */
+  --hk-gold-deep:      #997828;   /* ذهبي برونزي غامق */
+  --hk-gold-glow:      rgba(212, 175, 55, 0.35);
+  --hk-gold-border:    rgba(212, 175, 55, 0.35);
+  --hk-gold-bright:    rgba(212, 175, 55, 0.75);
+
+  /* Typography Colors */
+  --hk-text-primary:   #FFFFFF;   /* نص أبيض أساسي فخم */
+  --hk-text-secondary: #C5C5C7;   /* نص ثانوي واضح */
+  --hk-text-muted:     #8E8E93;   /* نصوص فرعية وهوامش */
+
+  /* Status Colors */
+  --hk-success:        #30D158;
+  --hk-success-glow:   rgba(48, 209, 88, 0.25);
+  --hk-danger:         #FF453A;
+  --hk-danger-glow:    rgba(255, 69, 58, 0.25);
+  --hk-warning:        #FF9F0A;
+
+  /* Typography Families (Saudi App Standard) */
+  --font-arabic-heading: 'Almarai', 'Cairo', sans-serif;
+  --font-latin-heading:  'Cormorant Garamond', serif;
+  --font-body:           'Almarai', sans-serif;
+}

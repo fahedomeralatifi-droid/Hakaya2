@@ -1,0 +1,129 @@
+[
+  {
+    "id": "prod_1792509810382",
+    "name": "الفهد",
+    "category": "oud",
+    "categoryName": "دهون عطر ملكي",
+    "priceSAR": 102,
+    "oldPriceSAR": 121,
+    "priceYER": 41300,
+    "oldPriceYER": 50000,
+    "discount": "-17%",
+    "ml": 100,
+    "image": "assets/images/uploads/prod_1792509810382_main.jpg",
+    "images": [
+      "assets/images/uploads/prod_1792509810382_0.jpg"
+    ],
+    "stock": 1,
+    "rating": 5,
+    "reviewsCount": 1,
+    "subtitle": "زجاجة فاخرة • 100 مل ماء عطر مركز",
+    "desc": "ثبات رهيب"
+  },
+  {
+    "id": "prod_1792485175217",
+    "name": "ستار لايت",
+    "category": "men",
+    "categoryName": "عطور رجالية",
+    "priceSAR": 50,
+    "oldPriceSAR": 49,
+    "priceYER": 20600,
+    "oldPriceYER": 20500,
+    "discount": "-20%",
+    "ml": 50,
+    "image": "assets/images/uploads/prod_prod_1792485175217_main.jpg",
+    "images": [
+      "assets/images/uploads/prod_prod_1792485175217_0.jpg"
+    ],
+    "stock": 10,
+    "rating": 5,
+    "reviewsCount": 1,
+    "subtitle": "زجاجة فاخرة • 50 مل ماء عطر مركز",
+    "desc": "ثبات فوحان عطر مميز"
+  },
+  {
+    "id": "royal_oud",
+    "name": "دهن عود ملكي معتق",
+    "category": "oud",
+    "categoryName": "دهون عطر ملكي",
+    "priceSAR": 330,
+    "oldPriceSAR": 450,
+    "priceYER": 136290,
+    "oldPriceYER": 185850,
+    "discount": "-27%",
+    "ml": 100,
+    "image": "assets/images/bottles_3d/royal_oud.png",
+    "images": [
+      "assets/images/bottles_3d/royal_oud.png",
+      "assets/images/bottles_3d/amber_royal.png",
+      "assets/images/bottles_3d/oud_tola.png"
+    ],
+    "rating": 4.9,
+    "reviewsCount": 142,
+    "subtitle": "تولة ملكية زجاجية فاخرة • 12 مل (ربع تولة معتقة)",
+    "desc": "دهن عود كمبودي سيلاني عتيق، مستخلص بأعلى درجات النقاء من أندر خشب العود الطبيعي المعتق، يفوح بعبير بخوري بلسمي دافئ يمنحك حضوراً ملكياً مهيباً."
+  },
+  {
+    "id": "silk_musk",
+    "name": "مسك الحرير الصافي",
+    "category": "musk",
+    "categoryName": "مسك صافي",
+    "priceSAR": 240,
+    "oldPriceSAR": 320,
+    "priceYER": 99120,
+    "oldPriceYER": 132160,
+    "discount": "-25%",
+    "ml": 100,
+    "image": "assets/images/bottles_3d/silk_musk.png",
+    "images": [
+      "assets/images/bottles_3d/silk_musk.png",
+      "assets/images/bottles_3d/french_rose.png"
+    ],
+    "rating": 5,
+    "reviewsCount": 98,
+    "subtitle": "تولة مخملية نقية • 12 مل من المسك الأبيض البكر",
+    "desc": "نقاء الحرير والمسك الأبيض الفاخر مع نفحات منعشة من زهور الوادي والبودرة النقية، يمنحك إحساساً ملكياً بالنظافة والانتعاش طوال اليوم."
+  },
+  {
+    "id": "hero_perfume",
+    "name": "إكسير الذهب الرجالي",
+    "category": "men",
+    "categoryName": "عطور رجالية",
+    "priceSAR": 410,
+    "oldPriceSAR": 520,
+    "priceYER": 169330,
+    "oldPriceYER": 214760,
+    "discount": "-21%",
+    "ml": 100,
+    "image": "assets/images/bottles_3d/hero_perfume.png",
+    "images": [
+      "assets/images/bottles_3d/hero_perfume.png",
+      "assets/images/bottles_3d/royal_oud.png"
+    ],
+    "rating": 4.8,
+    "reviewsCount": 112,
+    "subtitle": "زجاجة كريستال فاخرة • 100 مل ماء عطر مركز (Parfum)",
+    "desc": "عطر التوقيع الملكي لدار حكاية، يجمع بين بريق الزعفران الكشميري والورد الدمشقي مع عمق خشب الصندل والعنبر والعود الذهبي النادر."
+  },
+  {
+    "id": "amber_royal",
+    "name": "عنبر السلطان الملكي",
+    "category": "oud",
+    "categoryName": "دهون عطر ملكي",
+    "priceSAR": 350,
+    "oldPriceSAR": 440,
+    "priceYER": 144550,
+    "oldPriceYER": 181720,
+    "discount": "-20%",
+    "ml": 100,
+    "image": "assets/images/bottles_3d/amber_royal.png",
+    "images": [
+      "assets/images/bottles_3d/amber_royal.png",
+      "assets/images/bottles_3d/royal_oud.png"
+    ],
+    "rating": 4.9,
+    "reviewsCount": 86,
+    "subtitle": "تولة فاخرة محكمة الإغلاق • 12 مل عنبر أصيل",
+    "desc": "دفء العنبر الرمادي الممزوج بأفخر أنواع الراتنجات العطرية والمسك الحار، ثبات أسطوري ينبض بالفخامة والهيبة."
+  }
+]
