@@ -517,15 +517,16 @@
             </p>
           </div>
 
-          <!-- كم ملي تحتاج؟ (30 أو 50 أو 100 أو يدوي - مطلب المستخدم بالصورة 4) -->
+          <!-- كم ملي تحتاج؟ (30 أو 50 أو 100 أو يدوي مع لوحة أرقام مصغرة - مطلب المستخدم) -->
           <div class="p-3 rounded-2xl bg-[#FBF9F5] border border-[#EBE3D5] text-right space-y-2">
             <div class="flex items-center justify-between">
               <span class="text-xs font-heading font-black text-gray-900">كم ملي تحتاج؟ (الحجم والعبوة):</span>
               <span id="detailSelectedMlText" class="text-[11px] font-mono font-bold text-hk-gold-deep">100 مل</span>
             </div>
 
-            <div class="flex items-center gap-2 flex-wrap">
-              <div class="grid grid-cols-3 gap-1.5 flex-1">
+            <!-- صف أزرار الملي مع بوكس اليدوي بجانبها في صف واحد منسق وأنيق -->
+            <div class="flex items-center gap-1.5 flex-nowrap">
+              <div class="grid grid-cols-3 gap-1 flex-1">
                 <button type="button" onclick="selectDetailMl(30, this)" class="detail-ml-chip py-1.5 px-2 rounded-xl border border-gray-200 bg-white text-gray-700 font-bold text-xs flex items-center justify-center gap-1 transition-all">
                   <span>30 مل</span>
                 </button>
@@ -537,11 +538,37 @@
                 </button>
               </div>
 
-              <!-- بوكس فارغ لتحديد الملي يدوي -->
-              <div class="flex items-center gap-1 bg-white border border-gray-300 rounded-xl px-2.5 py-1.5 shadow-2xs">
+              <!-- بوكس فارغ لتحديد الملي يدوي بجانب الأرقام بالأعلى -->
+              <div class="flex items-center gap-1 bg-white border border-gray-300 rounded-xl px-2.5 py-1.5 shadow-2xs focus-within:border-hk-gold focus-within:ring-1 focus-within:ring-hk-gold/30">
                 <label for="detailCustomMlInput" class="text-[10px] text-gray-500 font-bold">يدوي:</label>
-                <input id="detailCustomMlInput" type="number" min="1" max="1000" placeholder="مثال: 75" oninput="onDetailCustomMlChange(this.value)" class="w-12 text-center text-xs font-mono font-bold text-gray-900 bg-transparent outline-none focus:text-hk-gold-deep" />
+                <input id="detailCustomMlInput" type="number" min="1" max="1000" placeholder="150" oninput="onDetailCustomMlChange(this.value)" class="w-12 text-center text-xs font-mono font-bold text-gray-900 bg-transparent outline-none focus:text-hk-gold-deep" />
                 <span class="text-[10px] text-gray-400 font-medium">مل</span>
+              </div>
+            </div>
+
+            <!-- لوحة أرقام مصغرة وسلسة تحتها مباشرة (أرقام من 1 إلى 0 مع زر حذف ومسح وسعات سريعة) -->
+            <div id="detailMiniKeypad" class="mt-2 p-2 bg-[#F3EFE6] border border-[#E0D5C3] rounded-xl shadow-inner">
+              <div class="flex items-center justify-between text-[10px] text-gray-600 font-bold mb-1.5 px-0.5">
+                <span>سعات شائعة سريعة:</span>
+                <div class="flex gap-1">
+                  <button type="button" onclick="quickSetDetailMl(150)" class="px-2 py-0.5 bg-white border border-gray-300 rounded text-[9px] font-bold text-hk-gold-deep hover:bg-hk-gold hover:text-white transition-colors">150 مل</button>
+                  <button type="button" onclick="quickSetDetailMl(200)" class="px-2 py-0.5 bg-white border border-gray-300 rounded text-[9px] font-bold text-hk-gold-deep hover:bg-hk-gold hover:text-white transition-colors">200 مل</button>
+                  <button type="button" onclick="quickSetDetailMl(250)" class="px-2 py-0.5 bg-white border border-gray-300 rounded text-[9px] font-bold text-hk-gold-deep hover:bg-hk-gold hover:text-white transition-colors">250 مل</button>
+                </div>
+              </div>
+              <div class="grid grid-cols-6 gap-1 text-center font-mono font-bold text-xs">
+                <button type="button" onclick="detailKeypadPress('1')" class="py-1.5 bg-white rounded-lg border border-gray-200 hover:bg-hk-gold hover:text-white active:scale-95 shadow-2xs">1</button>
+                <button type="button" onclick="detailKeypadPress('2')" class="py-1.5 bg-white rounded-lg border border-gray-200 hover:bg-hk-gold hover:text-white active:scale-95 shadow-2xs">2</button>
+                <button type="button" onclick="detailKeypadPress('3')" class="py-1.5 bg-white rounded-lg border border-gray-200 hover:bg-hk-gold hover:text-white active:scale-95 shadow-2xs">3</button>
+                <button type="button" onclick="detailKeypadPress('4')" class="py-1.5 bg-white rounded-lg border border-gray-200 hover:bg-hk-gold hover:text-white active:scale-95 shadow-2xs">4</button>
+                <button type="button" onclick="detailKeypadPress('5')" class="py-1.5 bg-white rounded-lg border border-gray-200 hover:bg-hk-gold hover:text-white active:scale-95 shadow-2xs">5</button>
+                <button type="button" onclick="detailKeypadPress('6')" class="py-1.5 bg-white rounded-lg border border-gray-200 hover:bg-hk-gold hover:text-white active:scale-95 shadow-2xs">6</button>
+                <button type="button" onclick="detailKeypadPress('7')" class="py-1.5 bg-white rounded-lg border border-gray-200 hover:bg-hk-gold hover:text-white active:scale-95 shadow-2xs">7</button>
+                <button type="button" onclick="detailKeypadPress('8')" class="py-1.5 bg-white rounded-lg border border-gray-200 hover:bg-hk-gold hover:text-white active:scale-95 shadow-2xs">8</button>
+                <button type="button" onclick="detailKeypadPress('9')" class="py-1.5 bg-white rounded-lg border border-gray-200 hover:bg-hk-gold hover:text-white active:scale-95 shadow-2xs">9</button>
+                <button type="button" onclick="detailKeypadPress('0')" class="py-1.5 bg-white rounded-lg border border-gray-200 hover:bg-hk-gold hover:text-white active:scale-95 shadow-2xs">0</button>
+                <button type="button" onclick="detailKeypadBackspace()" class="py-1.5 bg-rose-50 text-rose-600 rounded-lg border border-rose-200 hover:bg-rose-600 hover:text-white active:scale-95 shadow-2xs text-[11px]" title="حذف رقم">⌫</button>
+                <button type="button" onclick="detailKeypadClear()" class="py-1.5 bg-amber-50 text-amber-700 rounded-lg border border-amber-200 hover:bg-amber-600 hover:text-white active:scale-95 shadow-2xs text-[10px] font-sans" title="مسح">مسح</button>
               </div>
             </div>
           </div>
@@ -594,11 +621,15 @@
               </div>
             </div>
 
-            <!-- Main CTA Button -->
-            <button onclick="addCurrentDetailToCart()" class="flex-1 py-2.5 px-3 rounded-full bg-gradient-to-r from-[#17140E] via-[#241F16] to-[#120F0A] border border-hk-gold text-hk-gold-light hover:brightness-125 font-heading font-black text-xs shadow-md flex items-center justify-center gap-1.5 active:scale-95 transition-all">
-              <span>إضافة للسلة</span>
-              <span class="text-sm font-bold">+</span>
-            </button>
+            <!-- Main Action Buttons (إضافة للسلة + طلب فوري ومباشر عبر واتساب للرقم 775647590) -->
+            <div class="flex-1 flex items-center gap-1.5">
+              <button onclick="addCurrentDetailToCart()" class="flex-1 py-2.5 px-2 rounded-full bg-gradient-to-r from-[#17140E] via-[#241F16] to-[#120F0A] border border-hk-gold text-hk-gold-light hover:brightness-125 font-heading font-black text-[11px] shadow-md flex items-center justify-center gap-1 active:scale-95 transition-all">
+                <span>إضافة للسلة 🛍️</span>
+              </button>
+              <button onclick="orderCurrentProductViaWhatsApp()" class="py-2.5 px-2.5 rounded-full bg-gradient-to-r from-emerald-600 to-emerald-700 text-white hover:brightness-110 font-heading font-black text-[11px] shadow-md flex items-center justify-center gap-1 active:scale-95 transition-all" title="طلب مباشر وفوري عبر واتساب">
+                <span>طلب واتساب 💬</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -744,32 +775,41 @@
           </div>
 
           <!-- Bank Account Details Box (محدث ومربوط بلوحة التحكم مباشرة) -->
-          <div class="p-3 rounded-xl bg-[#F7F4EE] border border-[#E5DECF] text-[11px] space-y-1.5">
-            <div class="flex items-center justify-between border-b border-gray-200 pb-1">
-              <span id="appBankTitle" class="font-bold text-hk-gold-deep">بنك الكريمي الإسلامي</span>
-              <button type="button" onclick="copyAppAccountNum()" class="text-[10px] bg-white border border-hk-gold/40 px-2 py-0.5 rounded text-hk-gold-deep font-bold hover:bg-hk-gold hover:text-white transition-colors">
-                نسخ الرقم 📋
+          <div class="p-3 rounded-xl bg-[#F7F4EE] border border-[#E5DECF] text-[11px] space-y-2 shadow-2xs">
+            <div class="flex items-center justify-between border-b border-gray-200/80 pb-1.5">
+              <span id="appBankTitle" class="font-bold text-hk-gold-deep text-xs">بنك الكريمي للتمويل الأصغر الإسلامي</span>
+              <button type="button" onclick="copyAppAccountNum()" class="text-[10px] bg-white border border-hk-gold/40 px-2 py-0.5 rounded-md text-hk-gold-deep font-bold hover:bg-hk-gold hover:text-white transition-colors shadow-2xs">
+                نسخ رقم الحساب 📋
               </button>
             </div>
             <div class="flex items-center justify-between">
-              <span class="text-gray-500">اسم المستلم (الحساب):</span>
-              <span id="appBankRecipientName" class="font-bold text-gray-900">دار حكاية للعطور</span>
+              <span class="text-gray-500 font-bold">اسم المستلم (الحساب):</span>
+              <span id="appBankRecipientName" class="font-black text-gray-900">محمد رامي سعيد ادريس</span>
             </div>
             <div class="flex items-center justify-between">
-              <span class="text-gray-500">رقم الحساب:</span>
-              <span id="appBankAccNum" class="font-bold font-mono text-hk-gold-deep text-xs">3004892150</span>
+              <span class="text-gray-500 font-bold">رقم الحساب:</span>
+              <span id="appBankAccNum" class="font-black font-mono text-rose-600 text-xs tracking-wider">3098939589</span>
+            </div>
+            <div class="flex items-center justify-between pt-1 border-t border-gray-200/50">
+              <span class="text-gray-500 font-bold">رقم الهاتف / التحويل:</span>
+              <div class="flex items-center gap-1.5">
+                <span id="appBankPhone" class="font-black font-mono text-gray-800 text-xs">775647590</span>
+                <button type="button" onclick="copyAppPhoneNum()" class="text-[9px] bg-white border border-gray-300 px-1.5 py-0.5 rounded text-gray-700 font-bold hover:bg-gray-100 shadow-2xs">
+                  نسخ 📋
+                </button>
+              </div>
             </div>
           </div>
 
           <!-- بوكس إدخال رقم الحوالة أو رقم الإيداع (مطلب الصورة 4) -->
           <div>
             <label id="appTransferNumLabel" class="block text-[11px] font-bold text-gray-700 mb-1">
-              رقم الحوالة أو رقم الإشعار / السند *
+              رقم الحوالة المالية (الرقم المرجعي) <span class="text-rose-600 font-bold">* إجباري للاعتماد</span>
             </label>
             <input 
               id="appTransferNumber" 
               type="text" 
-              placeholder="أدخل رقم الحوالة أو رقم قيد الإيداع البنكي..." 
+              placeholder="أدخل رقم الحوالة المالية الصادرة..." 
               class="w-full px-3 py-2.5 rounded-xl border border-gray-300 text-xs text-gray-900 font-mono font-bold focus:border-hk-gold outline-none bg-[#FAFAFA]" 
               required 
             />
@@ -777,8 +817,8 @@
 
           <!-- إضافة سند إرسال الحوالة أو الإيداع (رفع صورة السند - مطلب الصورة 4) -->
           <div>
-            <label class="block text-[11px] font-bold text-gray-700 mb-1">
-              إرفاق صورة سند الحوالة أو الإيداع (اختياري / موصى به) 📄
+            <label id="appReceiptLabel" class="block text-[11px] font-bold text-gray-700 mb-1">
+              إرفاق صورة سند الحوالة (اختياري / موصى به) 📄
             </label>
             <input 
               type="file" 
@@ -1739,6 +1779,78 @@
       }
     }
 
+    // Mini Keypad Handlers for Product Detail Drawer (لوحة أرقام الملي المصغرة)
+    function detailKeypadPress(digit) {
+      const input = document.getElementById('detailCustomMlInput');
+      if (!input) return;
+      let val = (input.value || '').toString();
+      if (val.length >= 4) return;
+      val = val + digit;
+      input.value = val;
+      onDetailCustomMlChange(val);
+    }
+
+    function detailKeypadBackspace() {
+      const input = document.getElementById('detailCustomMlInput');
+      if (!input) return;
+      let val = (input.value || '').toString();
+      val = val.slice(0, -1);
+      input.value = val;
+      if (val.length > 0) {
+        onDetailCustomMlChange(val);
+      } else {
+        selectDetailMl(100);
+      }
+    }
+
+    function detailKeypadClear() {
+      const input = document.getElementById('detailCustomMlInput');
+      if (input) input.value = '';
+      selectDetailMl(100);
+    }
+
+    function quickSetDetailMl(ml) {
+      const input = document.getElementById('detailCustomMlInput');
+      if (input) input.value = ml;
+      onDetailCustomMlChange(ml);
+    }
+
+    // Direct Instant Order via WhatsApp for Current Product (مربوط بالرقم 775647590 مع كافة التفاصيل)
+    function orderCurrentProductViaWhatsApp() {
+      if (!selectedProduct) return;
+      const phoneNum = '967775647590';
+      const siteUrl = window.location.origin + window.location.pathname.replace(/\/+$/, '');
+      
+      const baseSAR = selectedProduct.priceSAR;
+      const baseYER = selectedProduct.priceYER;
+      const factor = (selectedDetailMl || 100) / 100;
+      const unitPrice = currentCurrency === 'SAR' ? (baseSAR * factor) : (baseYER * factor);
+      const total = (unitPrice * detailQty);
+      
+      const formattedTotal = currentCurrency === 'SAR' ? total.toFixed(2) + ' ر.س' : Math.round(total).toLocaleString('en-US') + ' ر.ي';
+      const imgFullUrl = selectedProduct.image && (selectedProduct.image.startsWith('http') || selectedProduct.image.startsWith('data:')) 
+        ? selectedProduct.image 
+        : (siteUrl + '/' + (selectedProduct.image || 'assets/images/bottles_3d/royal_oud.png'));
+
+      let custInfo = '';
+      if (currentUser && currentUser.name) {
+        custInfo = `\n👤 *بيانات العميل الكريم:*\n• الاسم: ${currentUser.name}\n• الهاتف: ${currentUser.phone || ''}\n`;
+      }
+
+      const msg = `👑 *طلب فوري ومباشر من دار حكاية للعطور*\n` +
+        `----------------------------------------\n` +
+        `🌸 *المنتج:* ${selectedProduct.name}\n` +
+        `📏 *السعة المطلوبة:* ${selectedDetailMl} مل\n` +
+        `🔢 *الكمية:* ${detailQty}\n` +
+        `💰 *المبلغ المطلوب:* ${formattedTotal}\n` +
+        `🖼️ *رابط صورة العطر:* ${imgFullUrl}\n` +
+        `----------------------------------------\n` +
+        custInfo +
+        `\n✨ _أود تأكيد واعتماد طلب هذا العطر مباشرة._`;
+
+      window.open(`https://wa.me/${phoneNum}?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
     function setCartItemMl(index, ml) {
       if (!cart[index]) return;
       cart[index].ml = ml;
@@ -1750,16 +1862,92 @@
       renderCartDrawerItems();
     }
 
-    function setCartItemCustomMl(index, val) {
+    function updateCustomMlLive(index, val) {
+      const item = cart[index];
+      if (!item) return;
       const num = parseInt(val, 10);
-      if (!cart[index] || isNaN(num) || num <= 0) return;
-      cart[index].ml = num;
-      cart[index].customMl = num;
-      const factor = num / 100;
-      cart[index].priceSAR = Math.round((cart[index].baseSAR * factor) * 100) / 100;
-      cart[index].priceYER = Math.round(cart[index].baseYER * factor);
-      cart[index].cartItemId = `${cart[index].id}_${num}ml`;
-      renderCartDrawerItems();
+      const validMl = (!isNaN(num) && num > 0) ? num : 100;
+      item.ml = validMl;
+      item.customMl = (!isNaN(num) && num > 0) ? num : null;
+      const factor = validMl / 100;
+      item.priceSAR = Math.round((item.baseSAR * factor) * 100) / 100;
+      item.priceYER = Math.round(item.baseYER * factor);
+      item.cartItemId = `${item.id}_${validMl}ml`;
+
+      // Update line price in place without DOM re-render (maintains keyboard & input focus)
+      const lineTotal = (currentCurrency === 'SAR' ? item.priceSAR : item.priceYER) * item.qty;
+      const priceEl = document.getElementById(`cartItemPrice_${index}`);
+      if (priceEl) {
+        priceEl.innerHTML = formatLuxuryRedPrice(lineTotal, currentCurrency === 'SAR', 'text-xs font-black');
+      }
+      const badgeEl = document.getElementById(`cartItemMlBadge_${index}`);
+      if (badgeEl) {
+        badgeEl.textContent = `${validMl} مل`;
+      }
+
+      // Update grand total
+      let grandTotal = 0;
+      cart.forEach(it => {
+        grandTotal += (currentCurrency === 'SAR' ? it.priceSAR : it.priceYER) * it.qty;
+      });
+      const grandTotalFormatted = formatLuxuryRedPrice(grandTotal, currentCurrency === 'SAR', 'text-base sm:text-lg font-black');
+      const drawerCurr = currentCurrency === 'SAR' ? `<img src="assets/images/sar_symbol_red.svg" alt="ر.س" class="h-3.5 w-auto object-contain inline" />` : '<span class="text-xs font-bold text-rose-600 font-mono">ر.ي</span>';
+      const totalEl = document.getElementById('cartDrawerTotal');
+      if (totalEl) {
+        totalEl.innerHTML = `<div class="flex items-baseline gap-1" dir="ltr">${grandTotalFormatted} ${drawerCurr}</div>`;
+      }
+
+      // Highlight active preset button vs custom
+      const p30 = document.getElementById(`presetBtn_${index}_30`);
+      const p50 = document.getElementById(`presetBtn_${index}_50`);
+      const p100 = document.getElementById(`presetBtn_${index}_100`);
+      const activeBtnCls = 'px-2 py-0.5 rounded text-[10px] font-bold transition-all bg-[#1A1A1A] text-hk-gold-bright shadow-xs';
+      const inactiveBtnCls = 'px-2 py-0.5 rounded text-[10px] font-bold transition-all text-gray-600 hover:bg-gray-100';
+      if (p30) p30.className = (!item.customMl && item.ml === 30) ? activeBtnCls : inactiveBtnCls;
+      if (p50) p50.className = (!item.customMl && item.ml === 50) ? activeBtnCls : inactiveBtnCls;
+      if (p100) p100.className = (!item.customMl && item.ml === 100) ? activeBtnCls : inactiveBtnCls;
+    }
+
+    // Mini Numeric Keypad Helpers
+    function toggleMiniKeypad(index) {
+      const pad = document.getElementById(`miniKeypad_${index}`);
+      if (pad) pad.classList.toggle('hidden');
+    }
+
+    function openMiniKeypad(index) {
+      const pad = document.getElementById(`miniKeypad_${index}`);
+      if (pad) pad.classList.remove('hidden');
+    }
+
+    function closeMiniKeypad(index) {
+      const pad = document.getElementById(`miniKeypad_${index}`);
+      if (pad) pad.classList.add('hidden');
+    }
+
+    function keypadPressDigit(index, digit) {
+      const input = document.getElementById(`cartCustomMlInput_${index}`);
+      if (!input) return;
+      let cur = (input.value || '').trim();
+      if (cur.length >= 4) return;
+      cur = (cur === '0' || cur === '') ? digit : (cur + digit);
+      input.value = cur;
+      updateCustomMlLive(index, cur);
+    }
+
+    function keypadBackspace(index) {
+      const input = document.getElementById(`cartCustomMlInput_${index}`);
+      if (!input) return;
+      let cur = (input.value || '').trim();
+      cur = cur.slice(0, -1);
+      input.value = cur;
+      updateCustomMlLive(index, cur || '100');
+    }
+
+    function quickSetMl(index, ml) {
+      const input = document.getElementById(`cartCustomMlInput_${index}`);
+      if (input) input.value = ml;
+      updateCustomMlLive(index, ml.toString());
+      closeMiniKeypad(index);
     }
 
     // Update Detail Total Price Display (الصورة 3: السعر بالأحمر الملكي الفاخر)
@@ -1880,24 +2068,71 @@
               <div class="flex items-baseline justify-between gap-1">
                 <h5 class="text-xs font-heading font-black text-gray-900 truncate">${item.name}</h5>
                 <div class="flex items-baseline gap-1" dir="ltr">
-                  ${formattedTotal}
+                  <span id="cartItemPrice_${index}">${formattedTotal}</span>
                   ${currBadge}
                 </div>
               </div>
               
-              <!-- تحديد الملي يدوي / بوكس فارغ و 30 / 50 / 100 مل (الصورة 4) -->
+              <!-- تحديد الملي: 30 / 50 / 100 + بوكس يدوي بجانبهم مباشرة + لوحة أرقام -->
               <div class="mt-2 pt-2 border-t border-gray-200/60">
-                <div class="text-[10px] text-gray-500 font-bold mb-1">كم ملي تحتاج؟</div>
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-[10px] text-gray-500 font-bold">كم ملي تحتاج؟</span>
+                  <span id="cartItemMlBadge_${index}" class="text-[10px] font-mono font-bold text-hk-gold-deep">${item.ml || 100} مل</span>
+                </div>
+
                 <div class="flex items-center gap-1.5 flex-wrap">
-                  <div class="inline-flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-0.5 shadow-2xs">
-                    <button type="button" onclick="setCartItemMl(${index}, 30)" class="px-2 py-0.5 rounded text-[10px] font-bold transition-all ${item.ml === 30 ? 'bg-[#1A1A1A] text-hk-gold-bright shadow-xs' : 'text-gray-600 hover:bg-gray-100'}">30</button>
-                    <button type="button" onclick="setCartItemMl(${index}, 50)" class="px-2 py-0.5 rounded text-[10px] font-bold transition-all ${item.ml === 50 ? 'bg-[#1A1A1A] text-hk-gold-bright shadow-xs' : 'text-gray-600 hover:bg-gray-100'}">50</button>
-                    <button type="button" onclick="setCartItemMl(${index}, 100)" class="px-2 py-0.5 rounded text-[10px] font-bold transition-all ${(!item.ml || item.ml === 100) ? 'bg-[#1A1A1A] text-hk-gold-bright shadow-xs' : 'text-gray-600 hover:bg-gray-100'}">100</button>
+                  <div class="inline-flex items-center gap-0.5 bg-white border border-gray-200 rounded-lg p-0.5 shadow-2xs">
+                    <button type="button" id="presetBtn_${index}_30" onclick="setCartItemMl(${index}, 30)" class="${(!item.customMl && item.ml === 30) ? 'px-2 py-0.5 rounded text-[10px] font-bold transition-all bg-[#1A1A1A] text-hk-gold-bright shadow-xs' : 'px-2 py-0.5 rounded text-[10px] font-bold transition-all text-gray-600 hover:bg-gray-100'}">30</button>
+                    <button type="button" id="presetBtn_${index}_50" onclick="setCartItemMl(${index}, 50)" class="${(!item.customMl && item.ml === 50) ? 'px-2 py-0.5 rounded text-[10px] font-bold transition-all bg-[#1A1A1A] text-hk-gold-bright shadow-xs' : 'px-2 py-0.5 rounded text-[10px] font-bold transition-all text-gray-600 hover:bg-gray-100'}">50</button>
+                    <button type="button" id="presetBtn_${index}_100" onclick="setCartItemMl(${index}, 100)" class="${(!item.customMl && (!item.ml || item.ml === 100)) ? 'px-2 py-0.5 rounded text-[10px] font-bold transition-all bg-[#1A1A1A] text-hk-gold-bright shadow-xs' : 'px-2 py-0.5 rounded text-[10px] font-bold transition-all text-gray-600 hover:bg-gray-100'}">100</button>
                   </div>
-                  <!-- بوكس فارغ لتحديد الملي يدوي -->
-                  <div class="inline-flex items-center gap-1 bg-white border border-gray-300 rounded-lg px-2 py-0.5 shadow-2xs">
-                    <input type="number" min="1" max="1000" placeholder="يدوي" value="${item.customMl || ''}" oninput="setCartItemCustomMl(${index}, this.value)" class="w-11 text-center text-[10px] font-mono font-bold text-gray-900 bg-transparent outline-none focus:text-hk-gold-deep" title="تحديد الملي يدوياً" />
-                    <span class="text-[9px] text-gray-400">مل</span>
+
+                  <!-- بوكس يدوي بجانب أرقام الملي بالأعلى في صف واحد أنيق -->
+                  <div class="inline-flex items-center gap-1 bg-white border border-gray-300 rounded-lg px-2 py-0.5 shadow-2xs focus-within:border-hk-gold focus-within:ring-1 focus-within:ring-hk-gold/30">
+                    <input 
+                      id="cartCustomMlInput_${index}" 
+                      type="number" 
+                      min="1" 
+                      max="1000" 
+                      placeholder="يدوي" 
+                      value="${item.customMl || ''}" 
+                      onfocus="openMiniKeypad(${index})" 
+                      oninput="updateCustomMlLive(${index}, this.value)" 
+                      class="w-12 text-center text-[10px] font-mono font-bold text-gray-900 bg-transparent outline-none focus:text-hk-gold-deep" 
+                      title="أدخل الملي المطلوب يدوياً (مثال: 150)" 
+                    />
+                    <span class="text-[9px] text-gray-400 font-bold">مل</span>
+                  </div>
+
+                  <!-- زر لوحة أرقام مصغرة -->
+                  <button type="button" onclick="toggleMiniKeypad(${index})" class="px-1.5 py-1 text-[10px] rounded-lg bg-white border border-gray-200 hover:bg-gray-100 text-gray-700 font-bold shadow-2xs" title="لوحة أرقام الملي السريعة">
+                    🔢
+                  </button>
+                </div>
+
+                <!-- لوحة أرقام صغيرة بسيطة وسلسة (من 1 إلى 0 مع زر مسح وحفظ وخيارات سريعة) -->
+                <div id="miniKeypad_${index}" class="hidden mt-2 p-2 bg-[#F5F2EB] border border-[#E0D8C8] rounded-xl shadow-inner animate-fadeIn">
+                  <div class="flex items-center justify-between text-[10px] text-gray-600 font-bold mb-1.5 px-0.5">
+                    <span>اختر أو ركب السعة:</span>
+                    <div class="flex gap-1">
+                      <button type="button" onclick="quickSetMl(${index}, 150)" class="px-1.5 py-0.5 bg-white border border-gray-300 rounded text-[9px] font-bold text-hk-gold-deep hover:bg-hk-gold hover:text-white">150 مل</button>
+                      <button type="button" onclick="quickSetMl(${index}, 200)" class="px-1.5 py-0.5 bg-white border border-gray-300 rounded text-[9px] font-bold text-hk-gold-deep hover:bg-hk-gold hover:text-white">200 مل</button>
+                      <button type="button" onclick="quickSetMl(${index}, 250)" class="px-1.5 py-0.5 bg-white border border-gray-300 rounded text-[9px] font-bold text-hk-gold-deep hover:bg-hk-gold hover:text-white">250 مل</button>
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-6 gap-1 text-center font-mono font-bold text-xs">
+                    <button type="button" onclick="keypadPressDigit(${index}, '1')" class="py-1.5 bg-white rounded-lg border border-gray-200 hover:bg-hk-gold hover:text-white active:scale-95 shadow-2xs">1</button>
+                    <button type="button" onclick="keypadPressDigit(${index}, '2')" class="py-1.5 bg-white rounded-lg border border-gray-200 hover:bg-hk-gold hover:text-white active:scale-95 shadow-2xs">2</button>
+                    <button type="button" onclick="keypadPressDigit(${index}, '3')" class="py-1.5 bg-white rounded-lg border border-gray-200 hover:bg-hk-gold hover:text-white active:scale-95 shadow-2xs">3</button>
+                    <button type="button" onclick="keypadPressDigit(${index}, '4')" class="py-1.5 bg-white rounded-lg border border-gray-200 hover:bg-hk-gold hover:text-white active:scale-95 shadow-2xs">4</button>
+                    <button type="button" onclick="keypadPressDigit(${index}, '5')" class="py-1.5 bg-white rounded-lg border border-gray-200 hover:bg-hk-gold hover:text-white active:scale-95 shadow-2xs">5</button>
+                    <button type="button" onclick="keypadPressDigit(${index}, '6')" class="py-1.5 bg-white rounded-lg border border-gray-200 hover:bg-hk-gold hover:text-white active:scale-95 shadow-2xs">6</button>
+                    <button type="button" onclick="keypadPressDigit(${index}, '7')" class="py-1.5 bg-white rounded-lg border border-gray-200 hover:bg-hk-gold hover:text-white active:scale-95 shadow-2xs">7</button>
+                    <button type="button" onclick="keypadPressDigit(${index}, '8')" class="py-1.5 bg-white rounded-lg border border-gray-200 hover:bg-hk-gold hover:text-white active:scale-95 shadow-2xs">8</button>
+                    <button type="button" onclick="keypadPressDigit(${index}, '9')" class="py-1.5 bg-white rounded-lg border border-gray-200 hover:bg-hk-gold hover:text-white active:scale-95 shadow-2xs">9</button>
+                    <button type="button" onclick="keypadPressDigit(${index}, '0')" class="py-1.5 bg-white rounded-lg border border-gray-200 hover:bg-hk-gold hover:text-white active:scale-95 shadow-2xs">0</button>
+                    <button type="button" onclick="keypadBackspace(${index})" class="py-1.5 bg-rose-50 text-rose-600 rounded-lg border border-rose-200 hover:bg-rose-600 hover:text-white active:scale-95 shadow-2xs text-[11px]" title="حذف رقم">⌫</button>
+                    <button type="button" onclick="closeMiniKeypad(${index})" class="py-1.5 bg-emerald-600 text-white rounded-lg border border-emerald-700 hover:bg-emerald-700 active:scale-95 shadow-2xs text-[11px] font-sans" title="تأكيد">✓ تم</button>
                   </div>
                 </div>
               </div>
@@ -1929,16 +2164,42 @@
       renderCartDrawerItems();
     }
 
-    // Checkout via WhatsApp
+    // Checkout via WhatsApp (مربوط مباشرة بالرقم 775647590 مع اسم المنتج والسعة والصورة والسعر)
     function checkoutViaWhatsApp() {
       if (cart.length === 0) {
         showToast('سلتك فارغة!');
         return;
       }
-      let itemsText = cart.map(i => `• ${i.name} (${i.ml} مل - الكمية: ${i.qty})`).join('\n');
-      let totalText = document.getElementById('cartDrawerTotal').textContent;
-      let msg = encodeURIComponent(`مرحباً دار حكاية للعطور الملكية 👑\nالاسم: ${currentUser.name || ''}\nالهاتف: ${currentUser.phone || ''}\nأود إتمام طلبي من تطبيق الجوال:\n${itemsText}\nالإجمالي: ${totalText}`);
-      window.open(`https://wa.me/967777889900?text=${msg}`, '_blank');
+      
+      const phoneNum = '967775647590';
+      const siteUrl = window.location.origin + window.location.pathname.replace(/\/+$/, '');
+
+      let itemsSummary = cart.map((i, idx) => {
+        const itemPrice = currentCurrency === 'SAR' ? (i.priceSAR * i.qty).toFixed(2) + ' ر.س' : (i.priceYER * i.qty).toLocaleString('en-US') + ' ر.ي';
+        const imgFullUrl = i.image && (i.image.startsWith('http') || i.image.startsWith('data:')) ? i.image : (siteUrl + '/' + (i.image || 'assets/images/bottles_3d/royal_oud.png'));
+        return `*${idx + 1}. عطر ${i.name}*\n   • السعة: ${i.ml || 100} مل\n   • الكمية: ${i.qty}\n   • السعر: ${itemPrice}\n   • رابط الصورة: ${imgFullUrl}`;
+      }).join('\n\n');
+
+      let grandTotal = 0;
+      cart.forEach(item => {
+        grandTotal += (currentCurrency === 'SAR' ? item.priceSAR : item.priceYER) * item.qty;
+      });
+      const totalFormatted = currentCurrency === 'SAR' ? grandTotal.toFixed(2) + ' ر.س' : grandTotal.toLocaleString('en-US') + ' ر.ي';
+
+      let custInfo = '';
+      if (currentUser && currentUser.name) {
+        custInfo = `\n👤 *بيانات العميل الكريم:*\n• الاسم: ${currentUser.name}\n• الهاتف: ${currentUser.phone || ''}\n`;
+      }
+
+      let msg = `👑 *طلب فوري ومباشر من متجر دار حكاية للعطور*\n` +
+        `----------------------------------------\n` +
+        itemsSummary + `\n` +
+        `----------------------------------------\n` +
+        `💰 *المبلغ الإجمالي النهائي:* ${totalFormatted}\n` +
+        custInfo +
+        `\n✨ _أود تأكيد واعتماد هذا الطلب وتوصيله بأسرع وقت._`;
+
+      window.open(`https://wa.me/${phoneNum}?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
     // Toggle Currency
@@ -1990,37 +2251,91 @@
     // CHECKOUT MODAL & REALTIME ADMIN SYNC ENGINE (الصورة 3 و 4)
     // ═════════════════════════════════════════════════════════════════════════
     const APP_BANKS = {
-      kuraimi: { title: 'بنك الكريمي الإسلامي', num: '3004892150', name: 'دار حكاية للعطور' },
-      qutaibi: { title: 'بنك القطيبي الإسلامي', num: '1224590', name: 'دار حكاية للعطور' },
-      shilin: { title: 'محفظة شلن الذكية', num: '777889900', name: 'دار حكاية للعطور' }
+      kuraimi: {
+        title: 'بنك الكريمي للتمويل الأصغر الإسلامي',
+        accountName: 'محمد رامي سعيد ادريس',
+        name: 'محمد رامي سعيد ادريس',
+        accountNumber: '3098939589',
+        num: '3098939589',
+        phone: '775647590',
+        notes: 'يرجى كتابة رقم الطلب في خانة الغرض / البيان عند التحويل عبر الكريمي جو.'
+      },
+      qutaibi: {
+        title: 'بنك القطيبي الإسلامي (قطيبي باي)',
+        accountName: 'محمد رامي سعيد ادريس',
+        name: 'محمد رامي سعيد ادريس',
+        accountNumber: '415914541',
+        num: '415914541',
+        phone: '775647590',
+        notes: 'التحويل متاح لحظياً عبر تطبيق قطيبي باي أو شبكة القطيبي للحوالات.'
+      },
+      shilin: {
+        title: 'محفظة شلن الإلكترونية',
+        accountName: 'محمد رامي سعيد ادريس',
+        name: 'محمد رامي سعيد ادريس',
+        accountNumber: '775647590',
+        num: '775647590',
+        phone: '775647590',
+        notes: 'الدفع فوري عبر مسح كود المحفظة أو التحويل لرقم الهاتف.'
+      }
     };
     let selectedAppBank = 'kuraimi';
     let currentPayType = 'transfer'; // 'transfer' (حوالة) or 'deposit' (إيداع)
     let selectedReceiptBase64 = null;
 
-    // Load Bank accounts in real-time from Server API / Firebase / LocalStorage
+    // Load Bank accounts in real-time from Server API / Firebase REST / LocalStorage
     async function loadAppBankAccounts() {
+      // 1. Firebase Direct REST Fetch (ينجح فوراً على GitHub Pages ومحلياً)
+      try {
+        const fbRes = await fetch('https://hekaya-perfume-default-rtdb.firebaseio.com/settings/banks.json');
+        if (fbRes.ok) {
+          const fbData = await fbRes.json();
+          if (fbData && typeof fbData === 'object') {
+            applyLoadedBanks(fbData);
+            return;
+          }
+        }
+      } catch (err) {}
+
+      // 2. Local API Fetch
       try {
         const res = await fetch(getAppApiBase() + '/api/banks?t=' + Date.now());
         if (res.ok) {
           const data = await res.json();
           if (data && typeof data === 'object') {
-            Object.assign(APP_BANKS, data);
-            updateAppBankDisplay();
+            applyLoadedBanks(data);
+            return;
           }
         }
-      } catch (e) {
-        try {
-          const local = localStorage.getItem('hikaya_bank_accounts');
-          if (local) {
-            const parsed = JSON.parse(local);
-            if (parsed.kuraimi) APP_BANKS.kuraimi = { title: 'بنك الكريمي الإسلامي', num: parsed.kuraimi.accountNumber || APP_BANKS.kuraimi.num, name: parsed.kuraimi.accountName || APP_BANKS.kuraimi.name };
-            if (parsed.qutaibi) APP_BANKS.qutaibi = { title: 'بنك القطيبي الإسلامي', num: parsed.qutaibi.accountNumber || APP_BANKS.qutaibi.num, name: parsed.qutaibi.accountName || APP_BANKS.qutaibi.name };
-            if (parsed.shilin) APP_BANKS.shilin = { title: 'محفظة شلن الذكية', num: parsed.shilin.accountNumber || APP_BANKS.shilin.num, name: parsed.shilin.accountName || APP_BANKS.shilin.name };
-            updateAppBankDisplay();
-          }
-        } catch (err) {}
-      }
+      } catch (e) {}
+
+      // 3. LocalStorage Fallback
+      try {
+        const local = localStorage.getItem('hikaya_bank_accounts');
+        if (local) {
+          const parsed = JSON.parse(local);
+          applyLoadedBanks(parsed);
+        }
+      } catch (err) {}
+    }
+
+    function applyLoadedBanks(data) {
+      if (!data || typeof data !== 'object') return;
+      ['kuraimi', 'qutaibi', 'shilin'].forEach(k => {
+        if (data[k]) {
+          const b = data[k];
+          APP_BANKS[k] = {
+            title: b.title || (b.name && (b.name.includes('بنك') || b.name.includes('محفظة')) ? b.name : APP_BANKS[k].title),
+            accountName: b.accountName || (!b.name?.includes('بنك') && !b.name?.includes('محفظة') ? b.name : APP_BANKS[k].accountName),
+            name: b.accountName || APP_BANKS[k].accountName,
+            accountNumber: b.accountNumber || b.num || APP_BANKS[k].accountNumber,
+            num: b.accountNumber || b.num || APP_BANKS[k].num,
+            phone: b.phone || APP_BANKS[k].phone,
+            notes: b.notes || APP_BANKS[k].notes
+          };
+        }
+      });
+      updateAppBankDisplay();
     }
 
     function updateAppBankDisplay() {
@@ -2029,9 +2344,17 @@
         const titleEl = document.getElementById('appBankTitle');
         const numEl = document.getElementById('appBankAccNum');
         const nameEl = document.getElementById('appBankRecipientName');
-        if (titleEl) titleEl.textContent = info.title || '';
-        if (numEl) numEl.textContent = info.num || '';
-        if (nameEl) nameEl.textContent = info.name || 'دار حكاية للعطور';
+        const phoneEl = document.getElementById('appBankPhone');
+
+        const title = info.title || (selectedAppBank === 'kuraimi' ? 'بنك الكريمي للتمويل الأصغر الإسلامي' : selectedAppBank === 'qutaibi' ? 'بنك القطيبي الإسلامي' : 'محفظة شلن الإلكترونية');
+        const accNum = info.accountNumber || info.num || (selectedAppBank === 'kuraimi' ? '3098939589' : selectedAppBank === 'qutaibi' ? '415914541' : '775647590');
+        const recipientName = info.accountName || (info.name && !info.name.includes('بنك') && !info.name.includes('محفظة') ? info.name : 'محمد رامي سعيد ادريس');
+        const phone = info.phone || '775647590';
+
+        if (titleEl) titleEl.textContent = title;
+        if (numEl) numEl.textContent = accNum;
+        if (nameEl) nameEl.textContent = recipientName;
+        if (phoneEl) phoneEl.textContent = phone;
       }
     }
 
@@ -2051,12 +2374,13 @@
       updateAppBankDisplay();
     }
 
-    // Toggle Payment Type: Transfer vs Deposit (مطلب الصورة 4)
+    // Toggle Payment Type: Transfer vs Deposit (مطلب الصورة 3: إرسال حوالة أو إيداع بنكي)
     function selectPayType(type) {
       currentPayType = type;
       const btnTransfer = document.getElementById('btnPayTypeTransfer');
       const btnDeposit = document.getElementById('btnPayTypeDeposit');
-      const label = document.getElementById('appTransferNumLabel');
+      const numLabel = document.getElementById('appTransferNumLabel');
+      const receiptLabel = document.getElementById('appReceiptLabel');
       const input = document.getElementById('appTransferNumber');
 
       const activeClass = 'py-2.5 px-3 rounded-xl border border-hk-gold bg-[#1A1A1A] text-hk-gold-light font-bold flex items-center justify-center gap-1.5 shadow-sm transition-all';
@@ -2065,13 +2389,21 @@
       if (type === 'transfer') {
         if (btnTransfer) btnTransfer.className = activeClass;
         if (btnDeposit) btnDeposit.className = inactiveClass;
-        if (label) label.textContent = 'رقم الحوالة المالية (الرقم المرجعي) *';
-        if (input) input.placeholder = 'أدخل رقم الحوالة المالية الصادرة...';
+        if (numLabel) numLabel.innerHTML = 'رقم الحوالة المالية (الرقم المرجعي) <span class="text-rose-600 font-bold">* إجباري للاعتماد</span>';
+        if (receiptLabel) receiptLabel.innerHTML = 'إرفاق صورة سند الحوالة (اختياري / موصى به) 📄';
+        if (input) {
+          input.placeholder = 'أدخل رقم الحوالة المالية الصادرة...';
+          input.required = true;
+        }
       } else {
         if (btnTransfer) btnTransfer.className = inactiveClass;
         if (btnDeposit) btnDeposit.className = activeClass;
-        if (label) label.textContent = 'رقم قيد أو إشعار الإيداع البنكي *';
-        if (input) input.placeholder = 'أدخل رقم قيد الإيداع البنكي أو رقم السند...';
+        if (numLabel) numLabel.innerHTML = 'رقم إشعار أو قيد الإيداع البنكي <span class="text-gray-400 font-normal">(اختياري)</span>';
+        if (receiptLabel) receiptLabel.innerHTML = 'إرفاق صورة سند / إشعار الإيداع <span class="text-rose-600 font-bold">* إجباري للاعتماد</span> 📄';
+        if (input) {
+          input.placeholder = 'أدخل رقم إشعار الإيداع أو اترك فارغاً مع إرفاق السند...';
+          input.required = false;
+        }
       }
     }
 
@@ -2104,12 +2436,21 @@
     }
 
     function copyAppAccountNum() {
-      const numEl = document.getElementById('appBankAccNum');
-      const num = numEl ? numEl.textContent.trim() : '3004892150';
+      const info = APP_BANKS[selectedAppBank] || {};
+      const num = info.accountNumber || info.num || document.getElementById('appBankAccNum')?.textContent?.trim() || '3098939589';
       if (navigator.clipboard) {
         navigator.clipboard.writeText(num);
       }
       showToast(`تم نسخ رقم الحساب (${num}) بنجاح 📋`);
+    }
+
+    function copyAppPhoneNum() {
+      const info = APP_BANKS[selectedAppBank] || {};
+      const phone = info.phone || document.getElementById('appBankPhone')?.textContent?.trim() || '775647590';
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(phone);
+      }
+      showToast(`تم نسخ رقم الهاتف (${phone}) بنجاح 📋`);
     }
 
     function openAppCheckoutModal() {
@@ -2194,10 +2535,26 @@
         if (phoneInput) phoneInput.focus();
         return;
       }
-      if (!transferNumber) {
-        showToast(currentPayType === 'transfer' ? 'يرجى إدخال رقم الحوالة المالية ⚠️' : 'يرجى إدخال رقم إشعار/قيد الإيداع البنكي ⚠️');
-        if (transferNumInput) transferNumInput.focus();
-        return;
+
+      // التحقق الصارم بحسب طريقة السداد (مطلب الصورة 3 للمستخدم)
+      if (currentPayType === 'transfer') {
+        // عندما يحدد إرسال حوالة: إجباري يملأ بوكس رقم الحوالة، والسند اختياري
+        if (!transferNumber) {
+          showToast('يرجى إدخال رقم الحوالة المالية الصادرة للاعتماد ⚠️');
+          if (transferNumInput) transferNumInput.focus();
+          return;
+        }
+      } else {
+        // عندما يحدد إيداع بنكي: لابد من إرفاق سند الإيداع، أما رقم السند غير مطالب به
+        if (!selectedReceiptBase64) {
+          showToast('يرجى إرفاق صورة سند أو إشعار الإيداع البنكي للاعتماد ⚠️');
+          const fileInput = document.getElementById('appReceiptFileInput');
+          if (fileInput) fileInput.click();
+          return;
+        }
+        if (!transferNumber) {
+          transferNumber = 'إيداع بنكي مباشر (مرفق صورة سند الإيداع)';
+        }
       }
 
       // Calculate totals in SAR and YER
@@ -2281,7 +2638,7 @@
         const payTypeTitle = currentPayType === 'transfer' ? 'إرسال حوالة 💸' : 'إيداع بنكي مباشر 🏦';
         const bankTitle = bankInfo.title || selectedAppBank;
         const msg = `مرحباً دار حكاية للعطور الملكية 👑%0Aلقد قمت باعتماد الطلب رقم: *${orderId}*%0Aالاسم: ${encodeURIComponent(name)}%0Aالهاتف: ${phone}%0Aالمدينة: ${encodeURIComponent(city)}%0Aطريقة السداد: ${encodeURIComponent(payTypeTitle)} (${encodeURIComponent(bankTitle)})%0Aرقم الحوالة/الإيداع: ${encodeURIComponent(transferNumber)}%0Aالمنتجات:%0A${itemsSummary}%0Aالمبلغ المطلوب: ${encodeURIComponent(formattedTotal)}%0Aتم إرسال الطلب واعتماده في النظام بنجاح ✨.`;
-        waBtn.href = `https://wa.me/967777889900?text=${msg}`;
+        waBtn.href = `https://wa.me/967775647590?text=${msg}`;
       }
 
       // 5. Switch to Success View
@@ -2343,11 +2700,10 @@
         }
       });
 
-      // 3. Live Bank Accounts Subscription
+      // 3. Live Bank Accounts Subscription (تحديث أرقام الحسابات واسم المستلم والهاتف مباشرة)
       HikayaFirebaseService.subscribeToBanks((liveBanks) => {
         if (liveBanks && typeof liveBanks === 'object') {
-          Object.assign(APP_BANKS, liveBanks);
-          updateAppBankDisplay();
+          applyLoadedBanks(liveBanks);
         }
       });
     }
